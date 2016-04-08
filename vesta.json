@@ -1,0 +1,21 @@
+{
+    "version": {
+        "app": "0.1.0",
+        "api": "v1"
+    },
+    "config": {
+        "name": "materialWebTemplate",
+        "group": "vesta",
+        "client": {
+            "platform": "browser",
+            "type": "angular",
+            "framework": "material"
+        },
+        "server": {},
+        "repository": {
+            "common": "commonCodeTemplate"
+        },
+        "type": "clientSide",
+        "endpoint": "http://localhost:3000"
+    }
+}
