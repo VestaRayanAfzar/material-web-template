@@ -1,26 +1,24 @@
-import {IRootScopeService, IModule, IAngularEvent, IAngularBootstrapConfig, ILocationProvider} from 'angular';
-import {IState, IStateService, IStateProvider, IUrlRouterProvider} from 'angular-ui-router';
-import {IClientAppSetting} from './config/setting';
-import {IRouteFunction} from './config/route';
-import {AuthService} from './service/AuthService';
-import {StorageService} from './service/StorageService';
-import {NetworkService} from './service/NetworkService';
-import {NotificationService} from './service/NotificationService';
-import {IUser} from './cmn/models/User';
+import {IRootScopeService, IModule, IAngularEvent, IAngularBootstrapConfig, ILocationProvider} from "angular";
+import {IState, IStateService, IStateProvider, IUrlRouterProvider} from "angular-ui-router";
+import {IClientAppSetting} from "./config/setting";
+import {IRouteFunction} from "./config/route";
+import {AuthService} from "./service/AuthService";
+import {StorageService} from "./service/StorageService";
+import {NetworkService} from "./service/NetworkService";
 import {I18nService} from "./service/I18nService";
 import {ILocale} from "./cmn/I18N";
 import {BaseController} from "./modules/BaseController";
 
 export interface IExtRootScopeService extends IRootScopeService {
-    bvm: BaseController;
-    locale: ILocale;
-    pageTitle: string;
+    bvm:BaseController;
+    locale:ILocale;
+    pageTitle:string;
 }
 
 interface IAppStatus {
-    type: string;
-    state: string;
-    date: number;
+    type:string;
+    state:string;
+    date:number;
 }
 
 export class ClientApp {

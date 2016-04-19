@@ -24,15 +24,15 @@ module.exports = function (dir, setting) {
 
     gulp.task('asset:lib', function () {
         var libs = [
-            dir.bower + '/jsSHA/src/sha1.js',
-            // dir.bower + '/es6-promise/promise.js',
-            dir.bower + '/angular/angular.js',
-            dir.bower + '/angular-aria/angular-aria.js',
-            dir.bower + '/angular-animate/angular-animate.js',
-            dir.bower + '/angular-messages/angular-messages.js',
-            dir.bower + '/angular-ui-router/release/angular-ui-router.js',
-            dir.bower + '/angular-material/angular-material.js',
-            dir.bower + '/angular-material-data-table/dist/md-data-table.js'
+            dir.npm + '/jssha/src/sha.js',
+            dir.npm + '/jquery-param/jquery-param.js',
+            dir.npm + '/angular/angular.js',
+            dir.npm + '/angular-animate/angular-animate.js',
+            dir.npm + '/angular-aria/angular-aria.js',
+            dir.npm + '/angular-messages/angular-messages.js',
+            dir.npm + '/angular-ui-router/release/angular-ui-router.js',
+            dir.npm + '/angular-material/angular-material.js',
+            dir.npm + '/angular-material-data-table/dist/md-data-table.js'
         ];
         var stream = gulp.src(libs).pipe(concat('lib.js'));
         if (setting.production) {
@@ -42,7 +42,7 @@ module.exports = function (dir, setting) {
     });
 
     gulp.task('asset:font', function () {
-        return gulp.src([dir.src + '/fonts/*', dir.bower + '/material-design-icons/iconfont/*'])
+        return gulp.src([dir.src + '/fonts/*', dir.npm + '/material-design-icons/iconfont/*'])
             .pipe(gulp.dest(dir.build + '/fonts'));
     });
 

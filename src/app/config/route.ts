@@ -1,15 +1,12 @@
-import {ILocationProvider} from 'angular';
-import {IStateProvider} from 'angular-ui-router';
-import {AuthService} from '../service/AuthService';
-import {IUrlRouterProvider} from 'angular-ui-router';
+import {ILocationProvider} from "angular";
+import {IStateProvider, IUrlRouterProvider} from "angular-ui-router";
 
 export interface IRouteFunction {
-    ($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider): void;
+    ($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider):void;
 }
 
 export function router($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider) {
-    $locationProvider.html5Mode(false);
-    $locationProvider.hashPrefix('!');
+    $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('home', {
         url: '/',
@@ -17,6 +14,16 @@ export function router($stateProvider:IStateProvider, $locationProvider:ILocatio
             'master': {
                 templateUrl: 'tpl/home.html',
                 controller: 'homeController',
+                controllerAs: 'vm'
+            }
+        }
+    });
+    $stateProvider.state('about', {
+        url: '/about',
+        views: {
+            'master': {
+                templateUrl: 'tpl/about.html',
+                controller: 'aboutController',
                 controllerAs: 'vm'
             }
         }

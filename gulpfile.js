@@ -4,7 +4,7 @@ var gulp = require('gulp'),
 var root = __dirname;
 var dir = {
     root: root,
-    bower: path.join(root, 'bower_components'),
+    npm: path.join(root, 'node_modules'),
     resource: path.join(root, 'resources'),
     gulp: path.join(root, 'resources/gulp'),
     typescriptLibrary: path.join('resources/tsd'),
@@ -12,7 +12,7 @@ var dir = {
     build: path.join(root, 'build')
 };
 
-var modules = ['asset', 'sass', 'ts'],
+var modules = ['asset', 'sass', 'ts', 'staticServer'],
     defaultTasks = [],
     watches = [],
     setting = {

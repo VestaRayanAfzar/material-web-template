@@ -1,12 +1,12 @@
-import {IVariantClientAppSetting, VariantClientAppSetting} from './setting.var';
+import {IVariantClientAppSetting, VariantClientAppSetting} from "./setting.var";
 
 export interface IClientAppSetting extends IVariantClientAppSetting {
-    name: string;
-    version: {app:string, api: string};
-    locale: string;
+    name:string;
+    version:{app:string, api:string};
+    locale:string;
 }
 
-export var setting: IClientAppSetting = {
+export var setting:IClientAppSetting = {
     name: 'materialWebTemplate',
     version: {
         app: '0.1.0',
@@ -14,5 +14,6 @@ export var setting: IClientAppSetting = {
     },
     locale: 'fa-IR',
     api: VariantClientAppSetting.api,
-    env: VariantClientAppSetting.env
+    env: VariantClientAppSetting.env,
+    cache: VariantClientAppSetting.cache
 };

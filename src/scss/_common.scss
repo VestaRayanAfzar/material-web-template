@@ -5,7 +5,7 @@
 ///<vesta:scssFont/>
 @import "fonts/material-design";
 ///<vesta:scssLibrary/>
-@import "lib/angular-material/1.0.2/_angular-material";
+@import "lib/angular-material/1.0.7/_angular-material";
 @import "lib/md-data-table/md-data-table";
 ///<vesta:scssElement/>
 @import "elements/global";
@@ -15,5 +15,6 @@
 @import 'directives/date-picker';
 @import "directives/round-image";
 ///<vesta:scssPage/>
+@import 'pages/about';
 @import 'pages/base';
 @import 'pages/home';

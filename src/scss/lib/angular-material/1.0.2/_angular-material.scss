@@ -3637,11 +3637,7 @@ $list-item-three-line-height: 11 * $baseline-grid !default;
 
 md-list {
   display: block;
-  @if $direction == ltr {
-    padding: $list-padding-top $list-padding-right $list-padding-bottom $list-padding-left;
-  } @else {
-    padding: $list-padding-top $list-padding-left $list-padding-bottom $list-padding-right;
-  }
+  @include rtl(padding, $list-padding-top $list-padding-right $list-padding-bottom $list-padding-left, $list-padding-top $list-padding-left $list-padding-bottom $list-padding-right);
   .md-subheader {
     font-size: $body-font-size-base;
     font-weight: 500;
@@ -4083,11 +4079,7 @@ md-menu-content.md-menu-bar-menu.md-dense {
       #{$float}: 3 * $baseline-grid;
     }
     > .md-button, .md-menu > .md-button {
-      @if $direction == ltr {
-        padding: 0 4 * $baseline-grid 0 8 * $baseline-grid;
-      } @else {
-        padding: 0 8 * $baseline-grid 0 4 * $baseline-grid;
-      }
+      @include rtl(padding, 0 4 * $baseline-grid 0 8 * $baseline-grid, 0 8 * $baseline-grid 0 4 * $baseline-grid);
     }
   }
   .md-button {
@@ -4772,11 +4764,7 @@ md-select {
 .md-select-value {
   display: flex;
   align-items: center;
-  @if($direction == ltr) {
-    padding: 2px 2px 1px 1px;
-  } @else {
-    padding: 2px 1px 1px 2px;
-  }
+  @include rtl(padding, 2px 2px 1px 1px, 2px 1px 1px 2px);
   border-bottom-width: 1px;
   border-bottom-style: solid;
   background-color: rgba(0,0,0,0);

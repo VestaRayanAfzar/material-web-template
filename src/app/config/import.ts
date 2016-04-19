@@ -18,3 +18,4 @@ export {fileUpload} from '../directive/fileUpload';
 export {roundImage} from '../directive/roundImage';
 export {BaseController} from '../modules/BaseController';
 export {HomeController} from '../modules/HomeController';
+export {AboutController} from '../modules/AboutController';

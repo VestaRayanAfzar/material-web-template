@@ -5,7 +5,6 @@
   },
   "config": {
     "name": "materialWebTemplate",
-    "group": "vesta",
     "client": {
       "platform": "browser",
       "type": "angular",
@@ -13,7 +12,7 @@
     },
     "server": {},
     "repository": {
-      "baseRepoUrl": "https://github.com",
+      "baseUrl": "https://github.com",
       "group": "hbtb",
       "name": "materialWebTemplate",
       "common": "commonCodeTemplate"

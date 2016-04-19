@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+
+  static-server:
+    image: node
+    volumes:
+      - .:/app
+    ports:
+      - '8088:8088'
+      - '3500:5858'
+    working_dir: /app
+    command: npm run serve
+    environment:
+      NODE_ENV: development
+      PORT: 8088

@@ -1,13 +1,47 @@
 {
   "name": "materialWebTemplate",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.3.1",
   "description": "Proveided by Vesta Rayan Afzar",
-  "main": "index.js",
-  "author": "Vesta Rayan Afzar",
-  "license": "Apache-2.0",
+  "keywords": [
+    "Code Generator",
+    "Vesta",
+    "Docker",
+    "Material Design",
+    "Angular"
+  ],
+  "author": "hbtb <bishehsary@gmail.com>",
+  "contributors": [
+    {
+      "name": "Mohammd Javad Khalilian",
+      "email": "khalilian.javad@gmail.com"
+    }
+  ],
   "scripts": {
-    "serve": "node node_modules/gulp/bin/gulp --gulpfile resources/gulp/run.js"
+    "serve": "node node_modules/gulp/bin/gulp --gulpfile resources/gulp/run.js",
+    "browse": "node node_modules/gulp/bin/gulp --gulpfile resources/gulp/run.js browse"
+  },
+  "bugs": {
+    "url": "https://github.com/hbtb/materialWebTemplate/issues",
+    "email": "bishehsary@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hbtb/materialWebTemplate.git"
+  },
+  "dependencies": {
+    "angular": "^1.5.3",
+    "angular-animate": "^1.5.3",
+    "angular-aria": "^1.5.3",
+    "angular-material": "^1.0.7",
+    "angular-material-data-table": "^0.10.5",
+    "angular-messages": "^1.5.3",
+    "angular-ui-router": "^0.2.18",
+    "express": "^4.13.4",
+    "jquery-param": "^0.2.0",
+    "jssha": "^2.0.2",
+    "material-design-icons": "^2.2.3",
+    "morgan": "^1.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
@@ -17,12 +51,14 @@
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.0",
+    "gulp-develop-server": "^0.5.1",
     "gulp-htmlmin": "^1.3.0",
     "gulp-image-optimization": "^0.1.3",
     "gulp-postcss": "^6.1.0",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.11.0",
-    "gulp-uglify": "^1.5.3"
+    "gulp-uglify": "^1.5.3",
+    "yamljs": "^0.2.7"
   }
 }

@@ -1,39 +1,41 @@
-import {IPromise, IQService, IHttpService, IHttpResponseTransformer, IHttpPromise, IRequestShortcutConfig} from 'angular'
-import {IClientAppSetting} from '../config/setting';
+import {IPromise, IHttpService, IHttpPromise, IRequestShortcutConfig, IQService} from "angular";
+import {IClientAppSetting} from "../config/setting";
 import {Err} from "../cmn/Err";
 import {AuthService} from "./AuthService";
-import IDeferred = angular.IDeferred;
 import {StorageService} from "./StorageService";
-import {jsSHA} from 'jssha';
+import {jsSHA} from "jssha";
 import {NetworkService} from "./NetworkService";
 
 export interface IFileKeyValue {
-    [key: string]: File|Blob
+    [key:string]:File|Blob
 }
 
 interface IOfflineRequest<T> {
-    type: string;
-    edge: string;
-    data: T;
-    date: number;
+    type:string;
+    edge:string;
+    data:T;
+    date:number;
 }
 
 interface IOnBeforeSendResult<T> {
-    tobeContinue: boolean;
-    error?: Err,
-    reqConfig?: IRequestShortcutConfig;
-    data?: T;
-    reqHash: string;
+    tobeContinue:boolean;
+    error?:Err,
+    reqConfig?:IRequestShortcutConfig;
+    data?:T;
+    reqHash:string;
 }
 
 export class ApiService {
     private endPoint:string = '';
     private offlineRequests = [];
     static $inject = ['$http', 'Setting', 'authService', '$q', 'storageService', 'networkService'];
+    private enableCache:boolean;
 
     constructor(private $http:IHttpService, private Setting:IClientAppSetting, private authService:AuthService,
                 private $q:IQService, private storageService:StorageService, private networkService:NetworkService) {
         this.endPoint = Setting.api;
+        this.enableCache = !!Setting.cache.api;
+        if (!(this.endPoint.charAt(this.endPoint.length - 1) == '/')) this.endPoint += '/';
     }
 
     private hashRequest<T>(method:string, edge:string, data:T) {
@@ -66,20 +68,14 @@ export class ApiService {
     }
 
     private requestHandler<T>(reqHash:string, req:IHttpPromise<any>):IPromise<T> {
-        var q:IDeferred<T> = this.$q.defer<T>(),
-            error:Err;
+        var deferred = this.$q.defer<T>();
         req.then((response)=> {
-            this.onAfterReceive<T>(reqHash, response);
-            if (!response || !response.data) {
-                error = new Err(Err.Code.NoDataConnection);
-                return q.reject(error);
-            }
-            q.resolve(response.data);
-        }, (response)=> {
-            error = this.errorHandler(response);
-            q.reject(error);
-        });
-        return q.promise;
+                if (!response || !response.data) return deferred.reject(new Err(Err.Code.NoDataConnection));
+                this.onAfterReceive<T>(reqHash, response);
+                deferred.resolve(response.data);
+            })
+            .catch(response=>deferred.reject(this.errorHandler(response)));
+        return deferred.promise;
     }
 
     private onBeforeSend<T>(method:string, edge:string, data:T):IOnBeforeSendResult<T> {
@@ -100,12 +96,12 @@ export class ApiService {
     }
 
     private onAfterReceive<T>(reqHash:string, response):void {
-        var tkn = response && response.headers('X-Auth-Token');
+        var tkn = response.headers('X-Auth-Token'),
+            data = response.data;
         if (tkn) {
             this.authService.setToken(tkn);
         }
-        var data = response && response.data;
-        if (data && reqHash) {
+        if (data && reqHash && this.enableCache) {
             this.storageService.set<T>(reqHash, data);
         }
     }
@@ -117,15 +113,8 @@ export class ApiService {
 
     public get<T extends Object, U>(edge:string, data?:T):IPromise<U> {
         var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('get', edge, data),
-            urlData = '';
+            urlData = data ? `?${window['urlParams'](data)}` : '';
         if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
-        if (data) {
-            for (var name in data) {
-                if (data.hasOwnProperty(name)) {
-                    urlData += '&' + name + '=' + data[name];
-                }
-            }
-        }
         return this.requestHandler<U>(config.reqHash, this.$http.get(this.endPoint + edge + '?' + urlData.substr(1), config.reqConfig));
     }
 

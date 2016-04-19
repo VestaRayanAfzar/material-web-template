@@ -12,7 +12,7 @@
       "commit": "9f0f926a12026287b5a4a229e5672c01e7549313"
     },
     "jquery/jquery.d.ts": {
-      "commit": "9f0f926a12026287b5a4a229e5672c01e7549313"
+      "commit": "544a35a10866b32afda9c7f029c0764558563f4f"
     },
     "jssha/jssha.d.ts": {
       "commit": "85af69c91599a6c904618545f0613970e1ff3f64"
@@ -22,6 +22,24 @@
     },
     "es6-promise/es6-promise.d.ts": {
       "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+    },
+    "express/express.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
+    },
+    "serve-static/serve-static.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
+    },
+    "express-serve-static-core/express-serve-static-core.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
+    },
+    "morgan/morgan.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
+    },
+    "node/node.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
+    },
+    "mime/mime.d.ts": {
+      "commit": "f5407eba29c04fb8387c86df27512bd055b195d2"
     }
   }
 }

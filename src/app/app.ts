@@ -25,6 +25,7 @@ function onDeviceReady() {
     ///<vesta:ngFilter/>
     clientApp.module.controller('baseController', imp.BaseController);
     clientApp.module.controller('homeController', imp.HomeController);
+    clientApp.module.controller('aboutController', imp.AboutController);
     ///<vesta:ngController/>
     clientApp.module.directive('animDirection', imp.animDirection);
     clientApp.module.directive('currencyInput', imp.currencyInput);
