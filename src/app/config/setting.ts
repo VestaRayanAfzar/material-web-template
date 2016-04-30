@@ -14,6 +14,8 @@ export var setting:IClientAppSetting = {
     },
     locale: 'fa-IR',
     api: VariantClientAppSetting.api,
+    static: VariantClientAppSetting.static,
     env: VariantClientAppSetting.env,
-    cache: VariantClientAppSetting.cache
+    cache: VariantClientAppSetting.cache,
+    viewport: VariantClientAppSetting.viewport
 };

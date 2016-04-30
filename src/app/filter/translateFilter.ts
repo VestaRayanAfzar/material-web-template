@@ -1,9 +1,13 @@
-import {TranslateService} from "../service/TranslateService";
+import {IClientAppSetting} from "../config/setting";
+import {Dictionary} from "../cmn/locale/Dictionary";
 
-export function translateFilter(translateService:TranslateService) {
+
+export function translateFilter(Setting:IClientAppSetting) {
+    var dictionary:Dictionary = new Dictionary(Setting.locale);
     return function (key:string, ...placeholders:Array<string>):string {
-        return translateService.translate(key, ...placeholders);
+        if (!key) return '';
+        return dictionary.get(key) || key;
     }
 }
 
-translateFilter.$inject = ['translateService'];
+translateFilter.$inject = ['Setting'];

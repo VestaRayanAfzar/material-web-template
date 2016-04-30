@@ -3,30 +3,43 @@
 }
 
 html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    font-family: $baseFontFamily;
+    direction: $direction;
     text-overflow: clip;
 }
 
 body {
-    font-family: $baseFontFamily;
-    direction: $direction;
-    background: url("../img/main-bg.jpg") no-repeat center;
-    background-size: contain;
-    position: relative;
-    margin: 0;
-    padding: 0;
+    font-size: $fontSizeBase;
+    line-height: 1.2;
+    color: $dark;
+}
+
+h1 {
+    font-size: $fontSizeXLarge;
+}
+
+h2 {
+    font-size: $fontSizeLarge;
+}
+
+h3 {
+    font-size: $fontSizeMedium;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: $blue;
+    &:visited {
+        color: $indigo;
+    }
 }
 
 .pane {
     height: 100%;
     width: 100%;
-    position: absolute;
-    overflow: hidden;
-    overflow-y: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    position: relative;
 }

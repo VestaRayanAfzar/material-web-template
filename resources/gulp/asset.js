@@ -2,9 +2,24 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     htmlmin = require('gulp-htmlmin'),
-    imageop = require('gulp-image-optimization');
+    imageop = require('gulp-image-optimization'),
+    fse = require('fs-extra');
 
 module.exports = function (dir, setting) {
+
+    gulp.task('docker:compose', function (done) {
+        if (setting.production) {
+            var containerPath = dir.build + '/src';
+            fse.copySync('package.json', containerPath + '/package.json');
+            fse.copySync('resources/docker', dir.build);
+            fse.renameSync(dir.build + '/compose-prod.yml', dir.build + '/docker-compose.yml');
+            fse.removeSync(dir.build + '/compose-dev.yml');
+            fse.renameSync(containerPath, dir.build + '/api/src');
+        } else {
+            fse.copySync(dir.docker + '/compose-dev.yml', 'docker-compose.yml');
+        }
+        done(null);
+    });
 
     gulp.task('asset:template', function () {
         var stream = gulp.src(dir.src + '/app/templates/**/*.html');
@@ -18,7 +33,7 @@ module.exports = function (dir, setting) {
             }));
         }
         stream.pipe(gulp.dest(dir.build + '/tpl'));
-        gulp.src(dir.src + '/index.html')
+        gulp.src(dir.src + '/*.html')
             .pipe(gulp.dest(dir.build));
     });
 
@@ -64,6 +79,6 @@ module.exports = function (dir, setting) {
 
     return {
         watch: ['asset:watch'],
-        tasks: ['asset:template', 'asset:lib', 'asset:font', 'asset:image']
+        tasks: ['docker:compose', 'asset:template', 'asset:lib', 'asset:font', 'asset:image']
     };
 };

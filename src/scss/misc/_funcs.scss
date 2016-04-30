@@ -1,5 +1,5 @@
-@function fontSize($coef) {
-    $base: 1rem;
+@function fontSize($coef:1) {
+    $base: 14px;
     @return $base * $coef;
 }
 

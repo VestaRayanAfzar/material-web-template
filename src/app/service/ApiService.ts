@@ -1,4 +1,4 @@
-import {IPromise, IHttpService, IHttpPromise, IRequestShortcutConfig, IQService} from "angular";
+import {IPromise, IQService, IHttpService, IHttpPromise, IRequestShortcutConfig} from "angular";
 import {IClientAppSetting} from "../config/setting";
 import {Err} from "../cmn/Err";
 import {AuthService} from "./AuthService";
@@ -113,7 +113,7 @@ export class ApiService {
 
     public get<T extends Object, U>(edge:string, data?:T):IPromise<U> {
         var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('get', edge, data),
-            urlData = data ? `?${window['urlParams'](data)}` : '';
+            urlData = data ? `?${window['param'](data)}` : '';
         if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
         return this.requestHandler<U>(config.reqHash, this.$http.get(this.endPoint + edge + '?' + urlData.substr(1), config.reqConfig));
     }

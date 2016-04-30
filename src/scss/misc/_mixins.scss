@@ -40,6 +40,7 @@
     transform: translate3d($x, $y, $z);
 }
 
+// Media queries
 @mixin mediaQuery($minWidth, $maxWidth:0) {
     @if ($minWidth>0 and $maxWidth>0) {
         @media screen and (min-width: $minWidth) and (max-width: $maxWidth) {
@@ -57,20 +58,14 @@
 
 }
 
-@mixin mediaQuerySmall() {
-    @include mediaQuery(0, $layoutSmallMax) {
+@mixin mediaQueryBelow() {
+    @include mediaQuery(0, $layoutBreak) {
         @content;
     }
 }
 
-@mixin mediaQueryMedium() {
-    @include mediaQuery($layoutSmallMax+1, $layoutMediumMax) {
-        @content;
-    }
-}
-
-@mixin mediaQueryLarge() {
-    @include mediaQuery($layoutMediumMax+1) {
+@mixin mediaQueryAbove() {
+    @include mediaQuery($layoutBreak + 1) {
         @content;
     }
 }

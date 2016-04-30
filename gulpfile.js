@@ -6,6 +6,7 @@ var dir = {
     root: root,
     npm: path.join(root, 'node_modules'),
     resource: path.join(root, 'resources'),
+    docker: path.join(root, 'resources/docker'),
     gulp: path.join(root, 'resources/gulp'),
     typescriptLibrary: path.join('resources/tsd'),
     src: path.join(root, 'src'),

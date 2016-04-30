@@ -20,15 +20,12 @@ $blueGrey: #607D8B;
 $black: #000000;
 $white: #FFFFFF;
 //
-$colorPrimary: #FF3300;
-$colorSecondary: #0AA9D1;
+$primary: #ff9900;
+$secondary: #0AA9D1;
+$light: $white;
+$dark: #333333;
+$success: $green;
+$error: $red;
+$info: $blue;
+$warning: $amber;
 //
-$colorInfo: $blue;
-$colorWarning: $amber;
-$colorError: $red;
-$colorDefault: $grey;
-//
-$light: darken($white, .2);
-$semiLight: darken($white, .4);
-$dark: lighten($black, .2);
-$semiDark: lighten($black, .4);

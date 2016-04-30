@@ -4,7 +4,10 @@ var gulp = require('gulp'),
     postCss = require('gulp-postcss'),
     autoPrefixer = require('autoprefixer'),
     csswring = require('csswring'),
-    mqpacker = require('css-mqpacker');
+    mqpacker = require('css-mqpacker'),
+    reporter = require('postcss-reporter'),
+    stylelint = require('stylelint'),
+    doiuse = require('doiuse');
 
 module.exports = function (dir, setting) {
 
@@ -17,18 +20,32 @@ module.exports = function (dir, setting) {
         return stream.pipe(gulp.dest(dir.build + '/pre-css'));
     });
 
-    gulp.task('sass:postCss', ['sass:compile'], function () {
-        var preprocessors = [autoPrefixer({
-            browsers: ['last 2 version',
+    var browsersToSupport = [
+        'last 2 version',
                 'iOS >= 7',
                 'Android >= 4',
                 'Explorer >= 10',
-                'ExplorerMobile >= 11']
-        })];
+        'ExplorerMobile >= 11'];
+
+    gulp.task('sass:postCss', ['sass:compile'], function () {
+        var preprocessors = [autoPrefixer({browsers: browsersToSupport})];
         if (setting.production) {
             preprocessors.push(mqpacker);
             preprocessors.push(csswring);
         }
+        return gulp.src(dir.build + '/pre-css/*.css')
+            .pipe(postCss(preprocessors))
+            .pipe(gulp.dest(dir.build + '/css'))
+    });
+
+    gulp.task('sass:analyse', ['sass:compile'], function () {
+        var preprocessors = [
+            autoPrefixer({browsers: browsersToSupport}),
+            stylelint(),
+            doiuse({browsers: browsersToSupport}),
+            reporter()
+        ];
+
         return gulp.src(dir.build + '/pre-css/*.css')
             .pipe(postCss(preprocessors))
             .pipe(gulp.dest(dir.build + '/css'))

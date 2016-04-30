@@ -1,7 +1,7 @@
-import {setting, IClientAppSetting} from './config/setting';
-import {IRouteFunction, router} from './config/route';
-import {ClientApp} from './ClientApp';
-import * as imp from './config/import';
+import {setting} from "./config/setting";
+import {router} from "./config/route";
+import {ClientApp} from "./ClientApp";
+import * as imp from "./config/import";
 
 document.addEventListener('DOMContentLoaded', onDeviceReady, false);
 

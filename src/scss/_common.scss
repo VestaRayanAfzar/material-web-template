@@ -5,6 +5,7 @@
 ///<vesta:scssFont/>
 @import "fonts/material-design";
 ///<vesta:scssLibrary/>
+@import "lib/reset/html5doctor/v1.6.1";
 @import "lib/angular-material/1.0.7/_angular-material";
 @import "lib/md-data-table/md-data-table";
 ///<vesta:scssElement/>
@@ -16,5 +17,5 @@
 @import "directives/round-image";
 ///<vesta:scssPage/>
 @import 'pages/about';
-@import 'pages/base';
+@import 'components/_frame';
 @import 'pages/home';
