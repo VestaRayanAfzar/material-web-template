@@ -17,32 +17,15 @@ body {
     min-height: 100%;
 }
 
-.main-header {
-    height: $headerHeight;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: $zIndexMainHeader;
-}
-
 .main-content {
     height: 100%;
     position: relative;
     [ui-view=master] {
-    display: flex;
-    flex-direction: column;
+        display: flex;
+        flex-direction: column;
         min-height: 100%;
-        min-height: calc(100% - #{$footerHeight});
         .page {
-            padding-top: $headerHeight - 2;
-        flex: 1;
+            flex: 1;
         }
     }
-}
-
-.main-footer {
-    height: $footerHeight;
-    min-height: $footerHeight;
-    direction: ltr;
-    text-align: center;
 }

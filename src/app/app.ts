@@ -33,6 +33,7 @@ function onDeviceReady() {
     clientApp.module.directive('dateInput', imp.dateInput);
     clientApp.module.directive('fileUpload', imp.fileUpload);
     clientApp.module.directive('roundImage', imp.roundImage);
+    clientApp.module.directive('viewportSpy', imp.viewportSpy);
     clientApp.module.directive('metaTags', imp.metaTags);
     ///<vesta:ngDirective/>
 
