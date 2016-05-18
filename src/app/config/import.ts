@@ -19,3 +19,4 @@ export {roundImage} from '../directive/roundImage';
 export {BaseController} from '../modules/BaseController';
 export {HomeController} from '../modules/HomeController';
 export {AboutController} from '../modules/AboutController';
+export {metaTags} from '../directive/metaTags';export {MetaTagsService} from '../service/MetaTagsService';

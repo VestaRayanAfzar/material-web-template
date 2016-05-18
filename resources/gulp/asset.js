@@ -3,38 +3,37 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     htmlmin = require('gulp-htmlmin'),
     imageop = require('gulp-image-optimization'),
-    fse = require('fs-extra');
+    inline = require('gulp-inline-angular-templates');
 
 module.exports = function (dir, setting) {
 
-    gulp.task('docker:compose', function (done) {
-        if (setting.production) {
-            var containerPath = dir.build + '/src';
-            fse.copySync('package.json', containerPath + '/package.json');
-            fse.copySync('resources/docker', dir.build);
-            fse.renameSync(dir.build + '/compose-prod.yml', dir.build + '/docker-compose.yml');
-            fse.removeSync(dir.build + '/compose-dev.yml');
-            fse.renameSync(containerPath, dir.build + '/api/src');
-        } else {
-            fse.copySync(dir.docker + '/compose-dev.yml', 'docker-compose.yml');
-        }
-        done(null);
-    });
+    var tmpDirectory = dir.build + '/tmp/img';
 
-    gulp.task('asset:template', function () {
+    gulp.task('asset:html', function () {
+        var rootStream = gulp.src(dir.src + '/*.html');
         var stream = gulp.src(dir.src + '/app/templates/**/*.html');
         if (setting.production) {
-            stream = stream.pipe(htmlmin({
-                removeComments: true,
-                collapseWhitespace: true,
-                conservativeCollapse: true,
-                collapseBooleanAttributes: true,
-                keepClosingSlash: true
-            }));
+            rootStream = minifyHtml(rootStream).on('error', setting.error);
+            stream = minifyHtml(stream).on('error', setting.error);
         }
-        stream.pipe(gulp.dest(dir.build + '/tpl'));
-        gulp.src(dir.src + '/*.html')
-            .pipe(gulp.dest(dir.build));
+        rootStream.pipe(gulp.dest(dir.buildWeb));
+        return stream.pipe(gulp.dest(dir.buildWeb + '/tpl'));
+    });
+
+    gulp.task('asset:etc', function () {
+        if (setting.production) {
+            return gulp.src([dir.src + '/robots.txt', dir.src + '/sitemap.xml'])
+                .pipe(gulp.dest(dir.buildWeb));
+        }
+    });
+
+    gulp.task('asset:template', ['asset:html', 'asset:etc'], function () {
+        gulp.src(dir.buildWeb + '/tpl/**/*.html')
+         .pipe(inline('build/app/html/index.html', {
+         base: 'build/app/html',
+         method: 'append'
+         }))
+            .pipe(gulp.dest(dir.buildWeb));
     });
 
     gulp.task('asset:lib', function () {
@@ -53,32 +52,47 @@ module.exports = function (dir, setting) {
         if (setting.production) {
             stream = stream.pipe(uglify());
         }
-        return stream.pipe(gulp.dest(dir.build + '/js/'));
+        return stream.pipe(gulp.dest(dir.buildWeb + '/js/'));
     });
 
     gulp.task('asset:font', function () {
-        return gulp.src([dir.src + '/fonts/*', dir.npm + '/material-design-icons/iconfont/*'])
-            .pipe(gulp.dest(dir.build + '/fonts'));
+        return gulp.src([dir.src + '/fonts/**/*', dir.npm + '/material-design-icons/iconfont/*'])
+            .pipe(gulp.dest(dir.buildWeb + '/fonts'));
     });
 
     gulp.task('asset:image', function () {
+        gulp.src(dir.src + '/images/**/*')
+            .pipe(gulp.dest(dir.buildWeb + '/img'));
+    });
+
+    gulp.task('asset:image:optimize', function () {
         var stream = gulp.src(dir.src + '/images/**/*');
         if (setting.production) {
-            stream.pipe(imageop({
+         stream = stream.pipe(imageop({
                 optimizationLevel: 5,
                 progressive: true,
                 interlaced: true
-            }));
+         })).on('error', setting.error);
         }
-        return stream.pipe(gulp.dest(dir.build + '/img'));
+        return stream.pipe(gulp.dest(tmpDirectory));
     });
 
     gulp.task('asset:watch', function () {
-        gulp.watch([dir.src + '/index.html', dir.src + '/app/templates/**/*.html'], ['asset:template']);
+        gulp.watch([dir.src + '/*.html', dir.src + '/app/templates/**/*.html'], ['asset:template']);
     });
 
     return {
         watch: ['asset:watch'],
-        tasks: ['docker:compose', 'asset:template', 'asset:lib', 'asset:font', 'asset:image']
+        tasks: ['asset:template', 'asset:lib', 'asset:font', 'asset:image']
     };
+
+    function minifyHtml(stream) {
+        return stream.pipe(htmlmin({
+            removeComments: true,
+            collapseWhitespace: true,
+            conservativeCollapse: true,
+            collapseBooleanAttributes: true,
+            keepClosingSlash: true
+        }))
+    }
 };

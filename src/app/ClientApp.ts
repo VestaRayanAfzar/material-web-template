@@ -8,11 +8,14 @@ import {NetworkService} from "./service/NetworkService";
 import {I18nService} from "./service/I18nService";
 import {ILocale} from "./cmn/I18N";
 import {BaseController} from "./modules/BaseController";
+import {IViewport} from "./directive/viewportSpy";
 
 export interface IExtRootScopeService extends IRootScopeService {
     bvm:BaseController;
+    vp:IViewport,
     locale:ILocale;
     pageTitle:string;
+    isDeviceOrSmall:boolean;
 }
 
 interface IAppStatus {
@@ -41,7 +44,6 @@ export class ClientApp {
         this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService',
             ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService)=> {
                 $rootScope.locale = i18nService.get();
-                $rootScope.pageTitle = 'Vesta Framework';
                 this.aclCheck($rootScope, authService, $state);
                 this.connectionWatcher(networkService);
                 var state2go = this.appWatcher(storageService, $state);

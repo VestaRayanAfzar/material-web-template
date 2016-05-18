@@ -4,6 +4,7 @@
 
 html, body {
     font-family: $baseFontFamily;
+    line-height: 1.2;
     direction: $direction;
     text-overflow: clip;
 }
@@ -11,7 +12,10 @@ html, body {
 body {
     font-size: $fontSizeBase;
     line-height: 1.2;
+    background: $bodyBgColor;
     color: $dark;
+    background: url("../img/bg-frag-hot.png") no-repeat center fixed;
+    background-size: cover;
 }
 
 h1 {
@@ -33,6 +37,7 @@ ul {
 a {
     text-decoration: none;
     color: $blue;
+    outline: 0 !important;
     &:visited {
         color: $indigo;
     }
@@ -42,4 +47,9 @@ a {
     height: 100%;
     width: 100%;
     position: relative;
+}
+
+.en {
+    font-family: Verdana, sans-serif;
+    direction: ltr;
 }

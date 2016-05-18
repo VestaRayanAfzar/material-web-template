@@ -11,20 +11,22 @@ var gulp = require('gulp'),
 
 module.exports = function (dir, setting) {
 
+    var tmpDirectory = dir.build + '/tmp/css';
+
     gulp.task('sass:compile', function () {
         var stream = gulp.src([dir.src + '/scss/app-rtl.scss', dir.src + '/scss/app-ltr.scss']),
             genMap = !setting.production;
         if (genMap) stream = stream.pipe(sourcemaps.init());
         stream = stream.pipe(sass());
         if (genMap) stream = stream.pipe(sourcemaps.write());
-        return stream.pipe(gulp.dest(dir.build + '/pre-css'));
+        return stream.pipe(gulp.dest(tmpDirectory));
     });
 
     var browsersToSupport = [
         'last 2 version',
-                'iOS >= 7',
-                'Android >= 4',
-                'Explorer >= 10',
+        'iOS >= 7',
+        'Android >= 4',
+        'Explorer >= 10',
         'ExplorerMobile >= 11'];
 
     gulp.task('sass:postCss', ['sass:compile'], function () {
@@ -33,9 +35,10 @@ module.exports = function (dir, setting) {
             preprocessors.push(mqpacker);
             preprocessors.push(csswring);
         }
-        return gulp.src(dir.build + '/pre-css/*.css')
+        return gulp.src(tmpDirectory + '/*.css')
             .pipe(postCss(preprocessors))
-            .pipe(gulp.dest(dir.build + '/css'))
+            .on('error', setting.error)
+            .pipe(gulp.dest(dir.buildWeb + '/css'))
     });
 
     gulp.task('sass:analyse', ['sass:compile'], function () {
@@ -46,9 +49,10 @@ module.exports = function (dir, setting) {
             reporter()
         ];
 
-        return gulp.src(dir.build + '/pre-css/*.css')
+        return gulp.src(tmpDirectory + '/*.css')
             .pipe(postCss(preprocessors))
-            .pipe(gulp.dest(dir.build + '/css'))
+            .on('error', setting.error)
+            .pipe(gulp.dest(tmpDirectory + '/analyze'))
     });
 
     gulp.task('sass:watch', function () {

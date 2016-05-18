@@ -6,9 +6,11 @@ var gulp = require('gulp'),
 
 module.exports = function (dir, setting) {
 
+    var tmpDirectory = dir.build + '/tmp/js';
+
     gulp.task('ts:compile', function () {
         var libSrc = dir.typescriptLibrary + '/**/*.ts';
-        var tsFiles = [libSrc, dir.src + '/**/*.ts'];
+        var tsFiles = [libSrc, dir.src + '/app/**/*.ts'];
         var stream = gulp.src(tsFiles);
         if (!setting.production) {
             stream = stream.pipe(map.init());
@@ -23,11 +25,11 @@ module.exports = function (dir, setting) {
         } else {
             tsResult = tsResult.js.pipe(map.write());
         }
-        return tsResult.pipe(gulp.dest(dir.build));
+        return tsResult.pipe(gulp.dest(tmpDirectory));
     });
 
     gulp.task('ts:browserify', ['ts:compile'], function () {
-        var stream = gulp.src(dir.build + '/app/app.js')
+        var stream = gulp.src(tmpDirectory + '/app.js')
             .pipe(browserify({
                 insertGlobals: false,
                 debug: !setting.production
@@ -35,7 +37,7 @@ module.exports = function (dir, setting) {
         if (setting.production) {
             stream = stream.pipe(uglify());
         }
-        return stream.pipe(gulp.dest(dir.build + '/js'))
+        return stream.pipe(gulp.dest(dir.buildWeb + '/js'))
     });
 
     gulp.task('ts:watch', function () {

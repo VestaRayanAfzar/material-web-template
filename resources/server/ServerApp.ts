@@ -1,9 +1,9 @@
 import * as express from "express";
 import * as morgan from "morgan";
 import * as http from "http";
-import {IStaticServerSetting} from "./staticApp";
+import {IStaticServerSetting} from "./app";
 
-export class StaticServer {
+export class ServerApp {
     private app:express.Express;
     private server:http.Server;
 
@@ -26,12 +26,12 @@ export class StaticServer {
         this.configExpressServer();
         this.app.use(express.static(this.setting.dir));
         this.app.use((req, res, next) => {
-            res.status(404);
+            // console.log(`\nStaticServer> Not Found: ${req.url}\n`);
             if (/.+\.(html|htm|js|css|xml|png|jpg|jpeg|gif|pdf|txt|ico|woff|woff2|svg|eot|ttf|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent)$/i.exec(req.url)) {
+                res.status(404);
                 return res.end();
             }
-            console.log('\n\nNot Found: ' + req.url + '\n\n');
-            res.sendFile('/app/build/index.html');
+            res.sendFile(this.setting.dir + '/index.html');
         });
 
         if (this.setting.env === 'development') {

@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+
+  web:
+    image: vesta/pm2
+    restart: always
+    expose:
+      - 8088
+    networks:
+      - network
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: pm2 start server/app.js --no-daemon
+    environment:
+      NODE_ENV: production
+      PORT: 8088
+
+networks:
+  network:

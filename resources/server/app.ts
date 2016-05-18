@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import {StaticServer} from "./StaticServer";
+import * as path from "path";
+import {ServerApp} from "./ServerApp";
 
 export interface IStaticServerSetting {
     dir:string;
@@ -8,11 +9,11 @@ export interface IStaticServerSetting {
 }
 
 var setting:IStaticServerSetting = {
-    dir: '/app/build',
-    port:process.env.PORT,
+    dir: path.join(__dirname, '../html'),
+    port: process.env.PORT,
     env: process.env.NODE_ENV
 };
 
-var server = new StaticServer(setting);
+var server = new ServerApp(setting);
 server.init();
 server.start();

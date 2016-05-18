@@ -1,0 +1,13 @@
+{
+  "name": "armanWebSite",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Proveided by Vesta Rayan Afzar",
+  "main": "staticApp.js",
+  "author": "Vesta Rayan Afzar",
+  "license": "VESTA",
+  "dependencies": {
+    "express": "^4.13.4",
+    "morgan": "^1.7.0"
+  }
+}

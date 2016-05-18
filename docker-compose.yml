@@ -2,13 +2,13 @@ version: '2'
 
 services:
 
-  static-server:
+  web:
     image: node
     volumes:
       - .:/app
     ports:
-      - '8088:8088'
-      - '3500:5858'
+      - '8089:8088'
+      - '8890:5858'
     working_dir: /app
     command: npm run serve
     environment:

@@ -2,7 +2,6 @@
 /ionic.project
 npm-debug*
 tsd-debug*
-/docker-compose.yml
 /build
 /node_modules
 /platforms
@@ -10,4 +9,3 @@ tsd-debug*
 /resources/tsd
 /resources/gulp/setting.js
 /src/app/config/setting.var.ts
-/www

@@ -18,6 +18,7 @@ function onDeviceReady() {
     clientApp.module.service('notificationService', imp.NotificationService);
     clientApp.module.service('networkService', imp.NetworkService);
     clientApp.module.service('datePickerService', imp.DatePickerService);
+    clientApp.module.service('metaTagsService', imp.MetaTagsService);
     ///<vesta:ngService/>
     clientApp.module.filter('dateTime', imp.dateTimeFilter);
     clientApp.module.filter('pagination', imp.paginationFilter);
@@ -32,6 +33,7 @@ function onDeviceReady() {
     clientApp.module.directive('dateInput', imp.dateInput);
     clientApp.module.directive('fileUpload', imp.fileUpload);
     clientApp.module.directive('roundImage', imp.roundImage);
+    clientApp.module.directive('metaTags', imp.metaTags);
     ///<vesta:ngDirective/>
 
     clientApp.bootstrap();
