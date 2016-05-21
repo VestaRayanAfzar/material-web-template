@@ -1,13 +1,18 @@
 export class StorageService {
-    private storage: Storage = localStorage;
+    private storage:Storage = localStorage;
 
-    public set<T>(key: string, value: T): void {
-        return this.storage.setItem(key, JSON.stringify(value));
+    public set<T>(key:string, value:T) {
+        try {
+            this.storage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            // QUOTA_EXCEEDED_ERR
+            // localStorage is full
+        }
     }
 
-    public get<T>(key: string): T {
-        var value: any = this.storage.getItem(key),
-            object: T;
+    public get<T>(key:string):T {
+        var value:any = this.storage.getItem(key),
+            object:T;
         try {
             object = JSON.parse(value);
         } catch (e) {
@@ -16,7 +21,7 @@ export class StorageService {
         return object;
     }
 
-    public remove(key: string): boolean {
+    public remove(key:string):boolean {
         this.storage.removeItem(key);
         return true;
     }

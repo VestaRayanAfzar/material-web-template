@@ -38,7 +38,11 @@ for (var i = 0, il = modules.length; i < il; ++i) {
 }
 
 gulp.task('init', function () {
+    try {
     fse.removeSync(dir.build);
+    } catch (e) {
+        console.error(e.message);
+    }
 });
 
 gulp.task('production', function () {

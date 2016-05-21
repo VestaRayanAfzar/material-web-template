@@ -1,6 +1,7 @@
 %animated-horizontal {
     $animationOffsetHorizontal: 5%;
-    transition: all cubic-bezier(0.25, 0.8, 0.25, 1) $transitionLongDuration;
+    transition: all $transitionLongDuration $easeInOut;
+    will-change: transform, opacity;
         &.ng-enter {
             transform: translate3d($animationOffsetHorizontal, 0, 0);
         //opacity: 0;

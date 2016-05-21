@@ -8,7 +8,8 @@ export interface IViewportSpyScope extends IScope {
 
 export interface IViewport {
     isDevice:boolean;
-    isSmallOrMedium:boolean;
+    isAbove:boolean;
+    isBelow:boolean;
     /*is:(tag:string)=>boolean;
      isOneOf:(...tags:Array<string>)=>boolean;*/
 }
@@ -24,7 +25,8 @@ export class ViewportSpyController {
                 private Setting:IClientAppSetting) {
         $rootScope.vp = {
             isDevice: false,
-            isSmallOrMedium: false/*,
+            isAbove: true,
+            isBelow: false/*,
              is: this.is.bind(this),
              isOneOf: this.isOneOf.bind(this)*/
         };
@@ -78,7 +80,13 @@ export class ViewportSpyController {
             this.viewportClasses = [];
             var width = document.documentElement.clientWidth,
                 sizes = this.Setting.viewport;
-            this.$rootScope.vp.isSmallOrMedium = width <= sizes.Break;
+            if (width > sizes.Break) {
+                this.$rootScope.vp.isAbove = true;
+                this.$rootScope.vp.isBelow = false;
+            } else {
+                this.$rootScope.vp.isAbove = false;
+                this.$rootScope.vp.isBelow = true;
+            }
             if (!this.$rootScope.$$phase) {
                 this.$rootScope.$apply();
             }

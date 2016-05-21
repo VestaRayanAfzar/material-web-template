@@ -15,6 +15,9 @@ $transitionShortDuration: 150ms;
 $transitionMediumDuration: 300ms;
 $transitionLongDuration: 600ms;
 // easing
+$easeIn: cubic-bezier(0.465, 0.183, 1, 1);
+$easeOut: cubic-bezier(0, 0, 0.153, 0.946);
+$easeInOut: cubic-bezier(0.465, 0.183, 0.153, 0.946);
 // zIndex
 $zIndexBase: 1;
 $zIndexDialog: 9;

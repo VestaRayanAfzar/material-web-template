@@ -16,9 +16,7 @@ module.exports = function (dir, setting) {
             removeComments: true
         }));
 
-        if (setting.production) {
-            fse.copySync(dir.server + '/package.json', dir.buildServer + '/package.json');
-        }
+        fse.copySync(dir.server + '/package.json', dir.buildServer + '/package.json');
 
         return (genMap ? tsResult.js : tsResult.js.pipe(map.write()))
             .pipe(gulp.dest(dir.buildServer));

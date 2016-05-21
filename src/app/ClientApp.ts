@@ -9,6 +9,7 @@ import {I18nService} from "./service/I18nService";
 import {ILocale} from "./cmn/I18N";
 import {BaseController} from "./modules/BaseController";
 import {IViewport} from "./directive/viewportSpy";
+import {AppCacheService} from "./service/AppCacheService";
 
 export interface IExtRootScopeService extends IRootScopeService {
     bvm:BaseController;
@@ -41,13 +42,14 @@ export class ClientApp {
                 router($stateProvider, $locationProvider, $urlRouterProvider);
             }]);
         // RUN
-        this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService',
-            ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService)=> {
+        this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService', 'appCacheService',
+            ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService, appCacheService:AppCacheService)=> {
                 $rootScope.locale = i18nService.get();
                 this.aclCheck($rootScope, authService, $state);
                 this.connectionWatcher(networkService);
                 var state2go = this.appWatcher(storageService, $state);
                 $state.go(state2go);
+                appCacheService.update();
             }])
     }
 
@@ -75,7 +77,7 @@ export class ClientApp {
         var appStatus:IAppStatus = storageService.get<IAppStatus>(this.appStatusKey),
         // todo: state params
         // todo: you may change this to go the last state
-            state2go = 'home';
+            state2go = appStatus && appStatus.state || 'home';
         window.addEventListener('unload', ()=> {
             storageService.set<IAppStatus>(this.appStatusKey, {
                 type: 'exit',

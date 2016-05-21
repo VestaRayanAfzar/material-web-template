@@ -3,7 +3,6 @@ import {IClientAppSetting} from "../config/setting";
 import {Err} from "../cmn/Err";
 import {AuthService} from "./AuthService";
 import {StorageService} from "./StorageService";
-import {jsSHA} from "jssha";
 import {NetworkService} from "./NetworkService";
 
 export interface IFileKeyValue {

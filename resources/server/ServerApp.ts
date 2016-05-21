@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as morgan from "morgan";
 import * as http from "http";
+import * as fs from "fs";
 import {IStaticServerSetting} from "./app";
 
 export class ServerApp {
@@ -20,18 +21,27 @@ export class ServerApp {
         this.app.disable('case sensitive routing');
         this.app.disable('strict routing');
         this.app.disable('x-powered-by');
+        try {
+            fs.mkdirSync(this.setting.dir.upload);
+        } catch (e) {
+        }
     }
 
     public init() {
         this.configExpressServer();
-        this.app.use(express.static(this.setting.dir));
+        this.app.use('/offline.manifest', (req, res, next)=> {
+            res.contentType('text/cache-manifest');
+            res.sendFile(`${this.setting.dir.html}/offline.manifest`);
+        });
+        this.app.use('/upl', express.static(this.setting.dir.upload));
+        this.app.use(express.static(this.setting.dir.html));
         this.app.use((req, res, next) => {
-            // console.log(`\nStaticServer> Not Found: ${req.url}\n`);
             if (/.+\.(html|htm|js|css|xml|png|jpg|jpeg|gif|pdf|txt|ico|woff|woff2|svg|eot|ttf|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent)$/i.exec(req.url)) {
                 res.status(404);
                 return res.end();
             }
-            res.sendFile(this.setting.dir + '/index.html');
+            console.log(`\nStaticServer> Not Found: ${req.url}\n`);
+            res.sendFile(`${this.setting.dir.html}/index.html`);
         });
 
         if (this.setting.env === 'development') {

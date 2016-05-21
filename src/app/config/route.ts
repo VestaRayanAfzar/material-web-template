@@ -8,7 +8,7 @@ export interface IRouteFunction {
 export function router($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider) {
     $locationProvider.html5Mode(true);
     // $locationProvider.hashPrefix('!');
-    $urlRouterProvider.otherwise('/');
+    // $urlRouterProvider.otherwise('/');
     $stateProvider.state('home', {
         url: '/',
         views: {

@@ -19,6 +19,7 @@ function onDeviceReady() {
     clientApp.module.service('networkService', imp.NetworkService);
     clientApp.module.service('datePickerService', imp.DatePickerService);
     clientApp.module.service('metaTagsService', imp.MetaTagsService);
+    clientApp.module.service('appCacheService', imp.AppCacheService);
     ///<vesta:ngService/>
     clientApp.module.filter('dateTime', imp.dateTimeFilter);
     clientApp.module.filter('pagination', imp.paginationFilter);

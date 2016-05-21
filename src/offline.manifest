@@ -1,0 +1,20 @@
+CACHE MANIFEST
+# v1.0
+# __DATE__
+
+CACHE:
+css/app-rtl.css
+fonts/MaterialIcons-Regular.woff2
+fonts/MaterialIcons-Regular.woff
+img/logo.png
+js/lib.js
+js/app.js
+favicon.ico
+index.html
+manifest.json
+
+
+NETWORK:
+*
+
+FALLBACK:

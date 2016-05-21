@@ -3,11 +3,13 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     htmlmin = require('gulp-htmlmin'),
     imageop = require('gulp-image-optimization'),
-    inline = require('gulp-inline-angular-templates');
+    inline = require('gulp-inline-angular-templates'),
+    fse = require('fs-extra');
 
 module.exports = function (dir, setting) {
 
     var tmpDirectory = dir.build + '/tmp/img';
+    var tplTempDirectory = dir.build + '/tmp/tpl';
 
     gulp.task('asset:html', function () {
         var rootStream = gulp.src(dir.src + '/*.html');
@@ -17,23 +19,29 @@ module.exports = function (dir, setting) {
             stream = minifyHtml(stream).on('error', setting.error);
         }
         rootStream.pipe(gulp.dest(dir.buildWeb));
-        return stream.pipe(gulp.dest(dir.buildWeb + '/tpl'));
+        return stream.pipe(gulp.dest(tplTempDirectory));
     });
 
-    gulp.task('asset:etc', function () {
-        if (setting.production) {
-            return gulp.src([dir.src + '/robots.txt', dir.src + '/sitemap.xml'])
-                .pipe(gulp.dest(dir.buildWeb));
-        }
-    });
-
-    gulp.task('asset:template', ['asset:html', 'asset:etc'], function () {
-        gulp.src(dir.buildWeb + '/tpl/**/*.html')
-         .pipe(inline('build/app/html/index.html', {
-         base: 'build/app/html',
-         method: 'append'
-         }))
+    gulp.task('asset:etc', ['asset:html'], function () {
+        return gulp.src(dir.src + '/*')
             .pipe(gulp.dest(dir.buildWeb));
+    });
+
+    gulp.task('asset:template', ['asset:etc'], function () {
+        findInFileAndReplace(dir.buildWeb + '/offline.manifest', '__DATE__', getDate());
+        if (!setting.production) {
+            // removing offline manifest in dev mode
+            findInFileAndReplace(dir.buildWeb + '/index.html', 'manifest="offline.manifest"', '');
+        }
+        var stream = gulp.src(tplTempDirectory + '/**/*.html')
+         .pipe(inline('build/app/html/index.html', {
+                base: 'build/tmp',
+         method: 'append'
+            }));
+        if (setting.production) {
+            stream = minifyHtml(stream).on('error', setting.error);
+        }
+        return stream.pipe(gulp.dest(dir.buildWeb));
     });
 
     gulp.task('asset:lib', function () {
@@ -94,5 +102,20 @@ module.exports = function (dir, setting) {
             collapseBooleanAttributes: true,
             keepClosingSlash: true
         }))
+    }
+
+    function findInFileAndReplace(file, search, replace) {
+        try {
+            var content = fse.readFileSync(file, {encoding: 'utf8'});
+            content = content.replace(search, replace);
+            fse.writeFileSync(file, content);
+        } catch (e) {
+            console.error(e.message);
+        }
+    }
+
+    function getDate() {
+        var d = new Date();
+        return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
     }
 };
