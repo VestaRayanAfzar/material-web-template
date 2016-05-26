@@ -1,12 +1,18 @@
 import {IExtRootScopeService} from "../ClientApp";
+import {SidenavService} from "../service/SidenavService";
+import {IStateService} from "angular-ui-router";
+import {ILocationService} from "angular";
 import IState = ng.ui.IState;
-import IStateService = ng.ui.IStateService;
 
 export class BaseController {
-    public pageTitle:string;
-    public static $inject = ['$rootScope', '$state'];
+    private sideNavName = 'main-sidenav';
+    public static $inject = ['$rootScope', '$state', 'sidenavService', '$location'];
 
-    constructor(private $rootScope:IExtRootScopeService, private $state:IStateService) {
+    constructor(private $rootScope:IExtRootScopeService, private $state:IStateService, private sidenavService:SidenavService, $location:ILocationService) {
         $rootScope.bvm = this;
+    }
+
+    public toggleSidenav() {
+        this.sidenavService.get(this.sideNavName).toggle();
     }
 }

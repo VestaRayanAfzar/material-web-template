@@ -14,8 +14,11 @@
 ///<vesta:scssComponent/>
 @import 'components/_frame';
 ///<vesta:scssDirective/>
+@import 'directives/sidenav';
+@import 'directives/menu-trigger';
 @import 'directives/date-picker';
 @import "directives/round-image";
 ///<vesta:scssPage/>
 @import 'pages/about';
-@import 'pages/home';@import 'pages/base';
+@import 'pages/home';
+@import 'pages/base';

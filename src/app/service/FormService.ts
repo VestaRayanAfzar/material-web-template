@@ -1,5 +1,5 @@
-import {IFormController, IRootScopeService} from 'angular';
-import {IValidationErrors} from "../cmn/Validator";
+import {IFormController} from "angular";
+import {IValidationErrors} from "vesta-schema/Validator";
 
 export class FormService {
     static $inject = [];
@@ -7,7 +7,7 @@ export class FormService {
     constructor() {
     }
 
-    public evaluate(validationErrors: IValidationErrors, form: IFormController): boolean {
+    public evaluate(validationErrors:IValidationErrors, form:IFormController):boolean {
         form.$setPristine();
         if (validationErrors == null) return true;
         for (var fieldName in validationErrors) {

@@ -1,8 +1,8 @@
 import {IScope, IDirective, IAugmentedJQuery, IAttributes, INgModelController} from 'angular';
-import {DateTime} from "../cmn/date/DateTime";
-import {DateTimeFactory} from "../cmn/date/DateTimeFactory";
 import {IClientAppSetting} from "../config/setting";
 import {DatePickerService} from "../service/DatePickerService";
+import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
+import {DateTime} from "vesta-datetime/DateTime";
 
 export class DateInputController {
     static $inject = ['Setting', 'datePickerService'];

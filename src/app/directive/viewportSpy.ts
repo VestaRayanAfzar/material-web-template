@@ -1,7 +1,7 @@
 import {IScope, IDirective, IAugmentedJQuery, IAttributes} from "angular";
 import {IExtRootScopeService} from "../ClientApp";
 import {IClientAppSetting} from "../config/setting";
-import {Platform} from "../cmn/Platform";
+import {Platform} from "vesta-util/Platform";
 
 export interface IViewportSpyScope extends IScope {
 }

@@ -1,0 +1,86 @@
+$triggerHeight: 64px;
+$triggerBarHeight: ceil($triggerHeight / 6);
+$rotationDegree: 45deg;
+
+.menu-trigger {
+    display: inline-block;
+    width: $triggerHeight;
+    height: $triggerHeight;
+    position: absolute;
+    top: floor($triggerHeight / 2);
+    right: 10px;
+    cursor: pointer;
+    z-index: 2;
+    transition: all $transitionMediumDuration;
+    will-change: transform;
+    > span {
+        display: inline-block;
+        position: absolute;
+        width: $triggerHeight;
+        height: $triggerBarHeight;
+        background: $light;
+        border-radius: 2px;
+        //transition: all $transitionMediumDuration;
+        //will-change: transform, width;
+        left: 0;
+        @include translate3d(0, 0, 0);
+        @include rotate(0);
+        opacity: 1;
+        &:nth-child(2) {
+            top: 2 * $triggerBarHeight;
+        }
+        &:nth-child(3) {
+            top: 4 * $triggerBarHeight;
+        }
+    }
+    &.opened {
+        /*> span {
+            &:nth-child(1) {
+                top: 2 * $triggerBarHeight;
+                @include rotate(-$rotationDegree);
+            }
+            &:nth-child(2) {
+                @include translate3d($triggerHeight, 0, 0);
+                opacity: 0;
+            }
+            &:nth-child(3) {
+                top: 2 * $triggerBarHeight;
+                @include rotate($rotationDegree);
+            }
+        }*/
+        @include rotate(180deg);
+        > span {
+            transform-origin: top left;
+            &:nth-child(1) {
+                left: 1px;
+                top: 2 * $triggerBarHeight - 1px;
+                @include rotate($rotationDegree);
+                width: floor(2*$triggerHeight/3);
+            }
+            &:nth-child(2) {
+                //background: rgba(200, 200, 200, .3);
+            }
+            &:nth-child(3) {
+                left: -3px;
+                top: 2 * $triggerBarHeight + 2px;
+                @include rotate(-$rotationDegree);
+                width: floor(2*$triggerHeight/3);
+            }
+        }
+    }
+    &.closed {
+        animation-name: anim-open-trigger;
+
+    }
+    @include mediaQueryAbove {
+        display: none;
+    }
+}
+
+.is-device {
+    .menu-trigger {
+        @include mediaQueryAbove {
+            display: inline-block;
+        }
+    }
+}

@@ -6,10 +6,12 @@ USE_SSL=$3
 NGINX_PATH=$4
 NGINX_CONFIG_FILE_NAME=$5
 WD=`pwd`
+counter=0
 
 print_status() {
+  ((counter=counter+1))
   echo
-  echo ">>>>    $1"
+  echo "${counter}:    $1"
 }
 
 cd ${CLONE_PATH}
@@ -27,7 +29,7 @@ gulp deploy
 
 print_status "Configuring NGINX"
 cd ${WD}
-mv ${CLONE_PATH}/resources/docker/nginx/load-balancer/http.conf ${NGINX_PATH}/conf.d/${NGINX_CONFIG_FILE_NAME}.conf.bak
+mv ${CLONE_PATH}/resources/docker/nginx.conf ${NGINX_PATH}/${NGINX_CONFIG_FILE_NAME}.conf
 cd ${CLONE_PATH}
 
 print_status "Installing Node Packages for Web Server"

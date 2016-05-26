@@ -1,6 +1,6 @@
 import {IPromise, IQService, IHttpService, IHttpPromise, IRequestShortcutConfig} from "angular";
+import {Err} from "vesta-util/Err";
 import {IClientAppSetting} from "../config/setting";
-import {Err} from "../cmn/Err";
 import {AuthService} from "./AuthService";
 import {StorageService} from "./StorageService";
 import {NetworkService} from "./NetworkService";

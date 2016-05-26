@@ -1,6 +1,5 @@
-import {DateTimeFactory} from "../cmn/date/DateTimeFactory";
 import {IClientAppSetting} from "../config/setting";
-
+import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
 
 export function dateTimeFilter(Setting:IClientAppSetting) {
     return function (value:number, format:string):string {

@@ -1,7 +1,7 @@
 import {IClientAppSetting} from "../config/setting";
 import {IDeferred, IQService, IPromise} from 'angular';
-import {DateTime} from "../cmn/date/DateTime";
-import {DateTimeFactory} from "../cmn/date/DateTimeFactory";
+import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
+import {DateTime} from "vesta-datetime/DateTime";
 
 export interface IDatePickerOptions {
     attachedTo?: HTMLElement;

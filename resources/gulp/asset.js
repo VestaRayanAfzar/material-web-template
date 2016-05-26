@@ -106,6 +106,7 @@ module.exports = function (dir, setting) {
 
     function findInFileAndReplace(file, search, replace) {
         try {
+            if (!fse.existsSync(file)) return;
             var content = fse.readFileSync(file, {encoding: 'utf8'});
             content = content.replace(search, replace);
             fse.writeFileSync(file, content);

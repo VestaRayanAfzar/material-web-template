@@ -1,6 +1,6 @@
 {
   "name": "materialWebTemplate",
-  "version": "0.5.1",
+  "version": "0.6.1",
   "description": "Proveided by Vesta Rayan Afzar",
   "keywords": [
     "Code Generator",
@@ -41,7 +41,15 @@
     "jquery-param": "^0.2.0",
     "jssha": "^2.0.2",
     "material-design-icons": "^2.2.3",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "vesta-datetime": "^0.2.7",
+    "vesta-datetime-gregorian": "^0.3.1",
+    "vesta-datetime-persian": "^0.2.8",
+    "vesta-i18n": "^0.3.3",
+    "vesta-locale-en-us": "^0.2.5",
+    "vesta-locale-fa-ir": "^0.2.4",
+    "vesta-schema": "^0.2.5",
+    "vesta-util": "^0.2.6"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",

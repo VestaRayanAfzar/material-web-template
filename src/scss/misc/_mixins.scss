@@ -69,3 +69,15 @@
         @content;
     }
 }
+
+@mixin mediaQueryLandscape() {
+    @media screen and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin mediaQueryPortrait() {
+    @media screen and (orientation: portrait) {
+        @content;
+    }
+}

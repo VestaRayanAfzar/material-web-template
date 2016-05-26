@@ -6,10 +6,10 @@ import {AuthService} from "./service/AuthService";
 import {StorageService} from "./service/StorageService";
 import {NetworkService} from "./service/NetworkService";
 import {I18nService} from "./service/I18nService";
-import {ILocale} from "./cmn/I18N";
 import {BaseController} from "./modules/BaseController";
 import {IViewport} from "./directive/viewportSpy";
 import {AppCacheService} from "./service/AppCacheService";
+import {ILocale} from "vesta-i18n/ILocale";
 
 export interface IExtRootScopeService extends IRootScopeService {
     bvm:BaseController;
