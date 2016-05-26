@@ -12,8 +12,8 @@ export interface IVariantClientAppSetting {
 
 export var VariantClientAppSetting:IVariantClientAppSetting = {
     env: 'development',
-    api: 'http://vestarayanafzar.com/api/v1',
-    static: 'http://vestarayanafzar.com/assets',
+    api: 'http://localhost:3000/api/v1',
+    static: 'http://localhost:8000/assets',
     cache: {
         api: 10
     },

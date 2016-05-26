@@ -7,7 +7,7 @@ import {enUS} from "vesta-locale-en-us/en-US";
 import {ApiService} from "./ApiService";
 import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
 import {PersianDate} from "vesta-datetime-persian/PersianDate";
-import GregorianDate from "vesta-datetime-gregorian/GregorianDate";
+import {GregorianDate} from "vesta-datetime-gregorian/GregorianDate";
 
 export class I18nService {
     private i18nLocale:ILocale;
