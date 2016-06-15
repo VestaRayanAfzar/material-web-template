@@ -1,0 +1,43 @@
+<md-input-container class="md-block">
+    <label for="name">نام نقش</label>
+    <input type="text" name="name" ng-model="vm.role.name" id="name" required/>
+    <div ng-messages="vm.roleForm.name.$dirty && vm.roleForm.name.$error">
+        <div ng-message="required">This field is required</div>
+        <div ng-message="unique">Duplicate Entry</div>
+    </div>
+</md-input-container>
+
+<md-input-container class="md-block">
+    <label for="desc">توضیح</label>
+    <textarea name="desc" ng-model="vm.role.desc" id="desc"></textarea>
+</md-input-container>
+
+<md-input-container class="md-block">
+    <label for="status" class="md-no-float">وضعیت</label>
+    <md-checkbox name="status" id="status" ng-model="vm.role.status">
+        فعال
+    </md-checkbox>
+</md-input-container>
+
+<div class="md-block">
+    <label>دسترسی ها</label>
+    <table class="p-table">
+        <thead>
+        <tr>
+            <th>نام لبه</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="p in vm.permissions">
+            <th>{{p.resource}}</th>
+            <td>
+                <span class="p-check" ng-repeat="a in p.actions">
+                    <label>{{a.name}}</label>
+                    <input type="checkbox" ng-model="vm.selectedPermissions[a.id]" value="{{a.id}}">
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

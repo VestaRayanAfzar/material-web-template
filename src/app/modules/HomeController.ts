@@ -1,10 +1,16 @@
-import {NotificationService} from "../service/NotificationService";
+import {BaseController} from "./BaseController";
+import {AuthService} from "../service/AuthService";
 
-export class HomeController {
+export class HomeController extends BaseController {
     public date:number;
-    public static $inject = ['notificationService'];
+    public static $inject = [];
 
-    constructor(private notificationService:NotificationService) {
+    constructor() {
+        super();
         this.date = Date.now();
+    }
+
+    public static registerPermissions() {
+        AuthService.registerPermissions('home');
     }
 }

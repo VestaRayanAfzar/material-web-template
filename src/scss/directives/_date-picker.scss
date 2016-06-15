@@ -1,12 +1,17 @@
 $dpWrapperWidth: 90vw;
-$dpAltWrapperWidth: 60vw;
-$dpWrapperOffset: (100vw - $dpWrapperWidth)/2;
-$dpAltWrapperOffset: (100vw - $dpAltWrapperWidth)/2;
+$dpWrapperMaxWidth: 350px;
+$dpAltWrapperWidth: 280px;
+$dpContentHeight: 300px;
 $dpCellWidth: 32px;
 $dpBgColor: transparentize($dark, .25);
-$dpContentHeight: 375px;
+
+%dp-clickable-btn {
+    cursor: pointer;
+    user-select: none;
+}
 
 %dp-button {
+    @extend %dp-clickable-btn;
     font-family: $baseFontFamily;
     background: transparent;
     color: $dark;
@@ -20,13 +25,13 @@ $dpContentHeight: 375px;
 }
 
 .dp-outer-wrapper {
-    position: absolute;
     background: $dpBgColor;
     z-index: $zIndexDatePicker;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     display: none;
+    position: fixed;
     &.dp-modal {
         top: 0;
         right: 0;
@@ -46,6 +51,7 @@ $dpContentHeight: 375px;
     border-radius: $button-border-radius;
     position: relative;
     width: $dpWrapperWidth;
+    max-width: $dpWrapperMaxWidth;
     transition: all $transitionMediumDuration;
     &.dp-alt-mode {
         width: $dpAltWrapperWidth;
@@ -111,6 +117,7 @@ $dpContentHeight: 375px;
         height: 50px;
         justify-content: center;
         > span {
+            @extend %dp-clickable-btn;
             display: inline-block;
             padding: 15px 10px 0 10px;
             font-size: $fontSizeLarge;
@@ -119,9 +126,11 @@ $dpContentHeight: 375px;
                 font-family: Tahoma, serif;
             }
             &.icon {
+                height: 50px;
                 flex: 1;
                 padding: 10px;
                 color: lighten($dark, 20%);
+                font-size: 36px;
                 &:first-child {
                     text-align: $float;
                 }
@@ -149,14 +158,20 @@ $dpContentHeight: 375px;
                 white-space: nowrap;
                 text-align: center;
                 font-family: Tahoma, serif;
-                padding: 10px 2px;
+                padding: 5px 2px;
+                //border:1px solid red;
                 > span {
+                    @extend %dp-clickable-btn;
                     display: inline-block;
-                    padding: 6px 5px;
+                    padding: 8px 0;
                     width: $dpCellWidth;
                     height: $dpCellWidth;
                     border-radius: 50%;
                     transition: all $transitionMediumDuration;
+                    //border:1px solid blue;
+                    &:hover {
+                        @include scale(1.4);
+                    }
                 }
                 &.dp-empty {
 
@@ -207,10 +222,10 @@ $dpContentHeight: 375px;
     flex-direction: row;
     > button {
         @extend %dp-button;
-        border-top: 1px solid $borderColor;
+        border-top: 1px solid silver;
         flex: 1;
         &:first-child {
-            border-#{$opposite-float}: 1px solid $borderColor;
+            border-#{$opposite-float}: 1px solid silver;
         }
     }
 }

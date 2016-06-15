@@ -15,9 +15,9 @@
     <link rel="icon" type="image/png" href="favicon.ico">
     <link rel="stylesheet" ng-href="css/app-{{locale.dir}}.css">
 </head>
-<body>
+<body viewport-spy>
 
-<div class="pane" ng-controller="baseController as bvm" id="base-page">
+<div ng-controller="rootController as rvm" class="pane" id="base-page">
     <div class="pane" ui-view="master"></div>
 </div>
 

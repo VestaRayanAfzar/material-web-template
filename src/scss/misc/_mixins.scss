@@ -23,20 +23,20 @@
     transform: rotate($degrees);
 }
 
-@mixin scale($ratio) {
-    transform: scale($ratio);
+@mixin scale($x, $y: $x) {
+    transform: scale($x, $y);
 }
 
-@mixin translate($x, $y) {
+@mixin translate($x, $y: $x) {
     transform: translate($x, $y);
 }
 
-@mixin skew($x, $y) {
+@mixin skew($x, $y: $x) {
     transform: skew($x, $y);
     -webkit-backface-visibility: hidden;
 }
 
-@mixin translate3d($x, $y, $z) {
+@mixin translate3d($x, $y: $x, $z: $y) {
     transform: translate3d($x, $y, $z);
 }
 

@@ -11,13 +11,13 @@ var gulp = require('gulp'),
 
 module.exports = function (dir, setting) {
 
-    var tmpDirectory = dir.build + '/tmp/css';
+    var tmpDirectory = setting.production ? dir.build + '/tmp/css' : dir.buildWeb + '/css';
 
     gulp.task('sass:compile', function () {
         var stream = gulp.src([dir.src + '/scss/app-rtl.scss', dir.src + '/scss/app-ltr.scss']),
             genMap = !setting.production;
         if (genMap) stream = stream.pipe(sourcemaps.init());
-        stream = stream.pipe(sass());
+        stream = stream.pipe(sass()).on('error', setting.error);
         if (genMap) stream = stream.pipe(sourcemaps.write());
         return stream.pipe(gulp.dest(tmpDirectory));
     });
@@ -34,11 +34,11 @@ module.exports = function (dir, setting) {
         if (setting.production) {
             preprocessors.push(mqpacker);
             preprocessors.push(csswring);
-        }
         return gulp.src(tmpDirectory + '/*.css')
             .pipe(postCss(preprocessors))
             .on('error', setting.error)
             .pipe(gulp.dest(dir.buildWeb + '/css'))
+        }
     });
 
     gulp.task('sass:analyse', ['sass:compile'], function () {

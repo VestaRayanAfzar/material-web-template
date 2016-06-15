@@ -1,8 +1,8 @@
-import {IScope, IDirective, IAugmentedJQuery, IAttributes, INgModelController} from 'angular';
+import {IScope, IDirective, IAugmentedJQuery, IAttributes, INgModelController} from "angular";
 import {IClientAppSetting} from "../config/setting";
 import {DatePickerService} from "../service/DatePickerService";
 import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
-import {DateTime} from "vesta-datetime/DateTime";
+import {IDateTime, DateTime} from "vesta-datetime/DateTime";
 
 export class DateInputController {
     static $inject = ['Setting', 'datePickerService'];
@@ -20,10 +20,24 @@ export class DateInputController {
 }
 
 export interface IDateInputScope extends IScope {
-    ngModel: any;
-    vm: DateInputController;
-    showPicker: string;
+    ngModel:any;
+    vm:DateInputController;
+    showPicker:string;
 }
+
+export interface IDateInput {
+    ():IDirective;
+    setDateTime:(dateTime:IDateTime)=>void;
+    defaultDateTime:IDateTime;
+}
+
+/**
+ * @ngdoc directive
+ * @name dateInput
+ * @restrict A
+ *
+ * @param {boolean} show-picker
+ */
 
 export function dateInput():IDirective {
     return {
@@ -37,7 +51,7 @@ export function dateInput():IDirective {
         controllerAs: 'vm',
         bindToController: false,
         link: function (scope:IDateInputScope, $element:IAugmentedJQuery, attrs:IAttributes, ngModel:INgModelController) {
-            var inputDate:DateTime = DateTimeFactory.create(scope.vm.getLocaleString());
+            var inputDate:DateTime = dateInput['defaultDateTime'] ? new dateInput['defaultDateTime']() : DateTimeFactory.create(scope.vm.getLocaleString());
             ngModel.$parsers.push(value=> {
                 var time = inputDate.validate(value);
                 if (time) {
@@ -71,3 +85,7 @@ export function dateInput():IDirective {
         }
     };
 }
+
+dateInput['setDateTime'] = function (dateTime:IDateTime) {
+    dateInput['defaultDateTime'] = dateTime;
+};

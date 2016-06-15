@@ -1,6 +1,6 @@
 export function paginationFilter() {
     return (items, page, limit, total, loadMore) => {
-        total = total || items.length;
+        total = total || (items ? items.length : 0);
         if (!items) {
             return items;
         }

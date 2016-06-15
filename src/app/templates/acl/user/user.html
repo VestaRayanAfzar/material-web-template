@@ -1,0 +1,83 @@
+<div class="page" id="user-page">
+    <h1>User Page</h1>
+    <div class="dt-wrapper" layout="column">
+
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!vm.dtOption.showFilter&&!vm.selectedUsersList.length">
+            <div class="md-toolbar-tools">
+                <h2 class="box-title">{{vm.dtOption.title}}</h2>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="vm.dtOption.showFilter=true">
+                    <md-icon>filter_list</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="vm.addUser($event)">
+                    <md-icon>add</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="vm.selectedUsersList.length">
+            <div class="md-toolbar-tools">
+                <p>Number of selected records: {{vm.selectedUsersList.length}}</p>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="vm.delUser($event)">
+                    <md-icon>delete</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar md-default" ng-show="vm.dtOption.showFilter&&!vm.selectedUsersList.length">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button">
+                    <md-icon>search</md-icon>
+                </md-button>
+                <md-input-container flex>
+                    <input type="search" ng-model="vm.dtOption.filter" placeholder="Type search query"/>
+                </md-input-container>
+                <md-button class="md-icon-button" ng-click="vm.dtOption.showFilter=false">
+                    <md-icon>clear</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table md-row-select multiple ng-model="vm.selectedUsersList">
+
+                <thead md-head md-order="vm.dtOption.order">
+                <tr>
+                    <th md-column>row</th>
+                    <th md-column md-order-by="id">id</th>
+                    <th md-column md-order-by="firstName">firstName</th>
+                    <th md-column md-order-by="lastName">lastName</th>
+                    <th md-column md-order-by="email">email</th>
+                    <th md-column md-order-by="birthDate">birthDate</th>
+                    <th md-column md-order-by="gender">gender</th>
+                    <th md-column>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row md-auto-select md-select="user.id"
+                    ng-repeat="user in vm.usersList  | filter:vm.dtOption.filter | pagination:vm.dtOption.page:vm.dtOption.limit:vm.dtOption.total:vm.dtOption.loadMore track by $index">
+                    <td md-cell>{{$index + 1 + (vm.dtOption.page - 1 ) * vm.dtOption.limit }}</td>
+                    <td md-cell>{{user.id}}</td>
+                    <td md-cell>{{user.firstName}}</td>
+                    <td md-cell>{{user.lastName}}</td>
+                    <td md-cell>{{user.email}}</td>
+                    <td md-cell>{{user.birthDate | dateTime}}</td>
+                    <td md-cell>{{vm.Gender[user.gender]}}</td>
+                    <td md-cell>
+                        <md-button class="md-icon-button" ng-click="vm.editUser($event, user.id)">
+                            <md-icon>mode_edit</md-icon>
+                        </md-button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination
+            md-limit="vm.dtOption.limit"
+            md-page="vm.dtOption.page"
+            md-total="{{vm.dtOption.total}}"
+            md-limit-options="vm.dtOption.rowsPerPage"
+            md-page-select="true"
+            md-on-paginate="vm.loadMore">
+        </md-table-pagination>
+    </div>
+</div>

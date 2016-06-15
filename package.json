@@ -1,6 +1,6 @@
 {
   "name": "materialWebTemplate",
-  "version": "0.6.1",
+  "version": "0.7.1",
   "description": "Proveided by Vesta Rayan Afzar",
   "keywords": [
     "Code Generator",
@@ -34,21 +34,21 @@
     "angular-animate": "^1.5.3",
     "angular-aria": "^1.5.3",
     "angular-material": "^1.0.7",
-    "angular-material-data-table": "^0.10.5",
+    "angular-material-data-table": "^0.10.9",
     "angular-messages": "^1.5.3",
     "angular-ui-router": "^0.2.18",
     "express": "^4.13.4",
     "jquery-param": "^0.2.0",
     "jssha": "^2.0.2",
-    "material-design-icons": "^2.2.3",
+    "md-font": "^2.2.3",
     "morgan": "^1.7.0",
     "vesta-datetime": "^0.2.7",
-    "vesta-datetime-gregorian": "^0.3.1",
+    "vesta-datetime-gregorian": "^0.3.4",
     "vesta-datetime-persian": "^0.2.8",
     "vesta-i18n": "^0.3.3",
     "vesta-locale-en-us": "^0.2.5",
     "vesta-locale-fa-ir": "^0.2.4",
-    "vesta-schema": "^0.2.5",
+    "vesta-schema": "^0.3.12",
     "vesta-util": "^0.2.6"
   },
   "devDependencies": {

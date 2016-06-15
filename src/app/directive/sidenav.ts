@@ -2,9 +2,13 @@ import {IScope, IDirective, IAugmentedJQuery, IAttributes} from "angular";
 import {IExtRootScopeService} from "../ClientApp";
 import {SidenavService} from "../service/SidenavService";
 
-export interface ISidenavScope extends IScope {
+export interface IMenuItem {
+    state:string;
+    title:string;
 }
 
+export interface ISidenavScope extends IScope {
+}
 
 export class SidenavController {
     private static SIDENAV_OPEN_CLASS_NAME = 'sidenav-open';
@@ -49,6 +53,7 @@ export class SidenavController {
  * @name sidenav
  * @restrict E
  *
+ * @param {string} component-id
  */
 
 export function sidenav():IDirective {

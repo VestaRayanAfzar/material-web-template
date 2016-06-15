@@ -6,27 +6,24 @@ import {AuthService} from "./service/AuthService";
 import {StorageService} from "./service/StorageService";
 import {NetworkService} from "./service/NetworkService";
 import {I18nService} from "./service/I18nService";
-import {BaseController} from "./modules/BaseController";
 import {IViewport} from "./directive/viewportSpy";
 import {AppCacheService} from "./service/AppCacheService";
 import {ILocale} from "vesta-i18n/ILocale";
+import {IUser} from "./cmn/models/User";
+import {IQueryResult, IQueryRequest} from "vesta-schema/ICRUDResult";
+import {ApiService} from "./service/ApiService";
+import {Err} from "vesta-util/Err";
+import {RootController} from "./modules/RootController";
 
 export interface IExtRootScopeService extends IRootScopeService {
-    bvm:BaseController;
+    rvm:RootController;
     vp:IViewport,
     locale:ILocale;
     pageTitle:string;
     isDeviceOrSmall:boolean;
 }
 
-interface IAppStatus {
-    type:string;
-    state:string;
-    date:number;
-}
-
 export class ClientApp {
-    private appStatusKey = 'appStatus';
     public module:IModule;
 
     constructor(private setting:IClientAppSetting, router:IRouteFunction) {
@@ -42,50 +39,57 @@ export class ClientApp {
                 router($stateProvider, $locationProvider, $urlRouterProvider);
             }]);
         // RUN
-        this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService', 'appCacheService',
-            ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService, appCacheService:AppCacheService)=> {
+        this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService', 'appCacheService', 'apiService',
+            ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService, appCacheService:AppCacheService, apiService:ApiService)=> {
                 $rootScope.locale = i18nService.get();
                 this.aclCheck($rootScope, authService, $state);
                 this.connectionWatcher(networkService);
-                var state2go = this.appWatcher(storageService, $state);
-                $state.go(state2go);
                 appCacheService.update();
+                this.checkAuthStatus(authService, apiService, $state);
             }])
     }
 
-    private aclCheck($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService) {
-        var userForbiddenStates = [];
-        var guestForbiddenStates = [];
-        $rootScope.$on('$stateChangeStart', (event:IAngularEvent, toState:IState)=> {
-            if (authService.isLoggedIn()) {
-                if (userForbiddenStates.indexOf(toState.name) >= 0) {
-                    event.preventDefault();
-                    //$state.go(guestForbiddenStates[0]);
-                    return false;
+    /**
+     1) Some time user data is removed from localStorage however the token is valid.
+     So from client side point of view user is NOT authenticated. However the token might valid on serverSide.
+
+     2) Some time user data exists in localStorage however the server session database is cleared.
+     So from client side point of view user is authenticated. However the token does not exist on serverSide.
+
+     The /account (GET) edge is responsible to returns the authenticated user data in case the token is valid
+     */
+    private checkAuthStatus(authService:AuthService, apiService:ApiService, $state:IStateService) {
+        var isLoggedIn = authService.isLoggedIn();
+        apiService.get<IQueryRequest<IUser>, IQueryResult<IUser>>('account')
+            .then(result=> {
+                var hasData = result.items && result.items.length;
+                // 1)
+                if (!isLoggedIn && hasData) {
+                    authService.login(result.items[0]);
                 }
-            } else {
-                if (guestForbiddenStates.indexOf(toState.name) >= 0) {
-                    event.preventDefault();
-                    //$state.go(userForbiddenStates[0]);
-                    return false;
+                // 2)
+                if (isLoggedIn && !hasData) {
+                    authService.logout();
+                    $state.go('login');
                 }
-            }
-        });
+            })
+            .catch(err=> {
+                // 2)
+                if (/*isLoggedIn && */[Err.Code.Unauthorized, Err.Code.Forbidden].indexOf(err.code) >= 0) {
+                    authService.logout();
+                    $state.go('login');
+                }
+            })
     }
 
-    private appWatcher(storageService:StorageService, $state:IStateService) {
-        var appStatus:IAppStatus = storageService.get<IAppStatus>(this.appStatusKey),
-        // todo: state params
-        // todo: you may change this to go the last state
-            state2go = appStatus && appStatus.state || 'home';
-        window.addEventListener('unload', ()=> {
-            storageService.set<IAppStatus>(this.appStatusKey, {
-                type: 'exit',
-                date: Date.now(),
-                state: $state.current.name
-            });
-        }, false);
-        return state2go;
+    private aclCheck($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService) {
+        $rootScope.$on('$stateChangeStart', (event:IAngularEvent, toState:IState)=> {
+            if (!authService.hasAccessToState(toState.name)) {
+                event.preventDefault();
+                console.log(`Prevent from going to forbidden state "${toState.name}"`);
+                return false;
+            }
+        });
     }
 
     private connectionWatcher(networkService:NetworkService) {
@@ -100,8 +104,8 @@ export class ClientApp {
     public bootstrap() {
         var isProduction = this.setting.env == 'production';
         var bsConfig:IAngularBootstrapConfig = {
-            strictDi: isProduction,
-            debugInfoEnabled: isProduction
+            strictDi: !isProduction,
+            debugInfoEnabled: !isProduction
         };
         angular.bootstrap(document, [this.setting.name], bsConfig);
     }

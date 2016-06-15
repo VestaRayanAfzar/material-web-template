@@ -33,7 +33,7 @@ export function menuTrigger():IDirective {
 
             function toggler() {
                 classList.toggle('opened');
-                (<IExtRootScopeService>scope.$root).bvm.toggleSidenav();
+                (<IExtRootScopeService>scope.$root).rvm.toggleSidenav();
             }
         }
     }

@@ -1,5 +1,12 @@
 import {IAttributes, IScope, IDirective, IAugmentedJQuery} from 'angular';
 
+/**
+ * @ngdoc directive
+ * @name animDirection
+ * @restrict A
+ *
+ */
+
 export function animDirection():IDirective {
     return {
         restrict: 'A',

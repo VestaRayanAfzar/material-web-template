@@ -50,8 +50,9 @@ export class ApiService {
     private errorHandler<T>(response):Err {
         var resError,
             error = new Err();
-        if (!response || !response.data) error = new Err(Err.Code.NoDataConnection);
-        if (response.data && response.data.error) {
+        if (!response || !response.data) {
+            error = new Err(Err.Code.NoDataConnection);
+        } else if (response.data && response.data.error) {
             resError = response.data.error;
         } else if (response.error) {
             resError = response.error;
@@ -63,6 +64,7 @@ export class ApiService {
         }
         error.message = error.message || 'Something goes wrong!';
         error.code = error.code || Err.Code.Unknown;
+        // if (error.code == Err.Code.Unauthorized) this.authService.logout();
         return error;
     }
 
@@ -70,10 +72,13 @@ export class ApiService {
         var deferred = this.$q.defer<T>();
         req.then((response)=> {
                 if (!response || !response.data) return deferred.reject(new Err(Err.Code.NoDataConnection));
+            this.extractToken(response);
                 this.onAfterReceive<T>(reqHash, response);
                 deferred.resolve(response.data);
-            })
-            .catch(response=>deferred.reject(this.errorHandler(response)));
+        }).catch(response=> {
+            this.extractToken(response);
+            deferred.reject(this.errorHandler(response))
+        });
         return deferred.promise;
     }
 
@@ -95,13 +100,16 @@ export class ApiService {
     }
 
     private onAfterReceive<T>(reqHash:string, response):void {
-        var tkn = response.headers('X-Auth-Token'),
-            data = response.data;
-        if (tkn) {
-            this.authService.setToken(tkn);
-        }
+        var data = response.data;
         if (data && reqHash && this.enableCache) {
             this.storageService.set<T>(reqHash, data);
+        }
+    }
+
+    private extractToken(response) {
+        var tkn = response.headers('X-Auth-Token');
+        if (tkn) {
+            this.authService.setToken(tkn);
         }
     }
 

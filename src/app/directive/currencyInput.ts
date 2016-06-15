@@ -3,6 +3,12 @@ import {IScope, IDirective, IAugmentedJQuery, IAttributes, INgModelController} f
 export interface ICurrencyInputScope extends IScope {
 }
 
+/**
+ * @ngdoc directive
+ * @name currencyInput
+ * @restrict A
+ *
+ */
 
 export function currencyInput():IDirective {
     return {

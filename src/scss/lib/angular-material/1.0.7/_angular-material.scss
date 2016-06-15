@@ -1595,7 +1595,7 @@ md-checkbox {
         box-sizing: border-box;
         transform: rotate(45deg);
         position: absolute;
-        #{$float}: $checkbox-width / 3;
+        left: $checkbox-width / 3;
         top: $checkbox-width / 9;
         display: table;
         width: $checkbox-width / 3;
@@ -1603,7 +1603,7 @@ md-checkbox {
         border-width: $checkbox-border-width;
         border-style: solid;
         border-top: 0;
-        border-#{$float}: 0;
+        border-left: 0; // check icon (do not change)
         content: '';
     }
 
@@ -1769,7 +1769,7 @@ $contact-chip-name-width: rem(12) !default;
                 position: absolute;
                 top: 50%;
                 #{$float}: 50%;
-                transform: translate3d(-50%, -50%, 0);
+                transform: translate3d(getValueByDirection(-50%, 50%), -50%, 0);
             }
         }
     }
@@ -4179,7 +4179,7 @@ $select-max-visible-options: 5;
 
 .md-select-menu-container {
     position: fixed;
-    #{$float}: 0;
+    left: 0;
     top: 0;
     z-index: $z-index-select;
     opacity: 0;

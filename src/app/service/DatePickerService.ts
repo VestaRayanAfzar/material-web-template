@@ -1,14 +1,14 @@
 import {IClientAppSetting} from "../config/setting";
-import {IDeferred, IQService, IPromise} from 'angular';
+import {IDeferred, IQService, IPromise} from "angular";
+import {IDateTime, DateTime} from "vesta-datetime/DateTime";
 import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
-import {DateTime} from "vesta-datetime/DateTime";
 
 export interface IDatePickerOptions {
-    attachedTo?: HTMLElement;
-    timestamp?: number;
-    clickToSelect?: boolean;
-    min?: number;
-    max?: number;
+    attachedTo?:HTMLElement;
+    timestamp?:number;
+    clickToSelect?:boolean;
+    min?:number;
+    max?:number;
 }
 
 export class DatePickerService {
@@ -26,11 +26,12 @@ export class DatePickerService {
     private inputDate:DateTime;
     private defer:IDeferred<number>;
     private options:IDatePickerOptions;
+    private static defaultDateTime:IDateTime;
 
     public static $inject = ['$q', 'Setting'];
 
     constructor(private $q:IQService, private Setting:IClientAppSetting) {
-        this.pickerDate = DateTimeFactory.create(Setting.locale);
+        this.pickerDate = DatePickerService.defaultDateTime ? new DatePickerService.defaultDateTime() : DateTimeFactory.create(this.Setting.locale);
         this.init();
     }
 
@@ -69,12 +70,13 @@ export class DatePickerService {
             if (this.altMode != 'year') return;
             clearTimeout(scrollTimer);
             scrollTimer = setTimeout(((downSide)=> {
+                console.log(event);
                 return ()=> {
                     this.addYearEntry(downSide);
                 }
             })(this.dpContent.scrollTop > lastScrollTop), 300);
             lastScrollTop = this.dpContent.scrollTop;
-        })
+        });
     }
 
     private renderDatePicker() {
@@ -85,7 +87,7 @@ export class DatePickerService {
 
     private getWeekDaysNameRow():HTMLTableRowElement {
         var tr:HTMLTableRowElement = document.createElement('tr'),
-            weekDays = this.pickerDate.locale.weekDays,
+            weekDays = this.pickerDate.locale.weekDaysShort,
             html = '';
         this.dpWrapper.querySelector('.dp-curr-year').textContent = String(this.pickerDate.getFullYear());
         this.dpWrapper.querySelector('.dp-curr-month').textContent = this.inputDate.locale.monthNames[this.pickerDate.getMonth()];
@@ -289,10 +291,10 @@ export class DatePickerService {
         </div>
         <div class="dp-body">
             <div class="dp-current">
-                <span class="dp-prev icon ion-chevron-left"></span>
+                <span class="dp-prev icon material-icons">chevron_right</span>
                 <span class="dp-curr-month"></span>
                 <span class="dp-curr-year"></span>
-                <span class="dp-next icon ion-chevron-right"></span>
+                <span class="dp-next icon material-icons">chevron_left</span>
             </div>
             <div class="dp-content">
                 <table></table>
@@ -314,7 +316,7 @@ export class DatePickerService {
 
     public show(options:IDatePickerOptions):IPromise<number> {
         this.options = options;
-        this.inputDate = DateTimeFactory.create(this.Setting.locale);
+        this.inputDate = DatePickerService.defaultDateTime ? new DatePickerService.defaultDateTime() : DateTimeFactory.create(this.Setting.locale);
         if (options.timestamp) {
             this.inputDate.setTime(options.timestamp);
         }
@@ -328,5 +330,9 @@ export class DatePickerService {
     public cancel() {
         this.toggleDatePicker();
         this.defer.reject();
+    }
+
+    public static setDateTime(dateTime:IDateTime) {
+        DatePickerService.defaultDateTime = dateTime;
     }
 }

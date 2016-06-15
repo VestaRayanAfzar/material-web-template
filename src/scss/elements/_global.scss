@@ -53,3 +53,11 @@ a {
     font-family: Verdana, sans-serif;
     direction: ltr;
 }
+[ui-view=master]{
+    background: $bodyBgColor;
+}
+
+.checkbox-item{
+    display: inline-block;
+    margin-#{$opposite-float}: 15px ;
+}

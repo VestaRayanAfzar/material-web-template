@@ -36,7 +36,6 @@ function getHostPort() {
         for (var i = service.ports.length; i--;) {
             var ports = service.ports[i].split(':');
             if (+ports[1] == service.environment.PORT) {
-                console.log(ports);
                 return +ports[0];
             }
         }

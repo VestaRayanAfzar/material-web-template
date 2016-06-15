@@ -29,7 +29,9 @@ module.exports = function (dir, setting) {
 
     gulp.task('asset:template', ['asset:etc'], function () {
         findInFileAndReplace(dir.buildWeb + '/offline.manifest', '__DATE__', getDate());
-        if (!setting.production) {
+        if (setting.production) {
+            findInFileAndReplace(dir.buildWeb + '/index.html', '<base href="/"/>', '<base href="/arman/"/>');
+        } else {
             // removing offline manifest in dev mode
             findInFileAndReplace(dir.buildWeb + '/index.html', 'manifest="offline.manifest"', '');
         }
@@ -64,7 +66,7 @@ module.exports = function (dir, setting) {
     });
 
     gulp.task('asset:font', function () {
-        return gulp.src([dir.src + '/fonts/**/*', dir.npm + '/material-design-icons/iconfont/*'])
+        return gulp.src([dir.src + '/fonts/**/*', dir.npm + '/md-font/iconfont/*'])
             .pipe(gulp.dest(dir.buildWeb + '/fonts'));
     });
 
