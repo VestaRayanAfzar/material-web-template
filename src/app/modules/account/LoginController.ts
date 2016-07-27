@@ -1,7 +1,4 @@
 import {User, IUser} from "../../cmn/models/User";
-import {ApiService} from "../../service/ApiService";
-import {FormService} from "../../service/FormService";
-import {NotificationService} from "../../service/NotificationService";
 import {Err} from "vesta-util/Err";
 import {IUpsertResult} from "vesta-schema/ICRUDResult";
 import {IStateService} from "angular-ui-router";
@@ -15,10 +12,9 @@ import IFormController = angular.IFormController;
 export class LoginController extends BaseController {
     private user:User;
     private userForm:IFormController;
-    public static $inject = ['apiService', 'formService', 'notificationService', '$state', 'authService'];
+    public static $inject = ['$state'];
 
-    constructor(private apiService:ApiService, private formService:FormService, private notificationService:NotificationService,
-                private $state:IStateService, private authService:AuthService) {
+    constructor(private $state:IStateService) {
         super();
         this.user = new User();
     }

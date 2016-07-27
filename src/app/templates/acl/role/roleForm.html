@@ -29,12 +29,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="p in vm.permissions">
+        <tr ng-repeat="p in vm.permissions" class="acl-checkbox">
             <th>{{p.resource}}</th>
             <td>
                 <span class="p-check" ng-repeat="a in p.actions">
-                    <label>{{a.name}}</label>
-                    <input type="checkbox" ng-model="vm.selectedPermissions[a.id]" value="{{a.id}}">
+                    <label>{{a.name}} <input type="checkbox" ng-model="vm.selectedPermissions[a.id]" value="{{a.id}}"></label>
                 </span>
             </td>
         </tr>

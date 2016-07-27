@@ -1,7 +1,9 @@
+import {AuthService, IAclActions} from "../service/AuthService";
 import {BaseController} from "./BaseController";
-import {AuthService} from "../service/AuthService";
+
 
 export class AboutController extends BaseController {
+    public acl:IAclActions;
     public static $inject = [];
 
     constructor() {

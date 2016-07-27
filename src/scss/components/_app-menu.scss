@@ -1,0 +1,66 @@
+.app-menu {
+    $triangleWidth:12px;
+    position: relative;
+    .menu-item {
+        position: relative;
+        //border: 1px solid red;
+    }
+    .has-child {
+        .menu-list {
+            // position: absolute;
+            top: 100%;
+            #{$float}: 0;
+        }
+    }
+    // first level children of this menu should be placed side by side
+    .list-l1 {
+        // border:1px solid red;
+        white-space: nowrap;
+        padding:10px;
+        background:$light;
+        position: absolute;
+        margin-top: $triangleWidth;
+        // box-shadow: 0 0 1px $dark;
+        border-radius: 1px;
+        &:before{
+            content: '';
+            position: absolute;
+            display: block;
+            width: $triangleWidth;
+            height: $triangleWidth;
+            border: $triangleWidth solid transparent;
+            border-bottom-color: $light;
+            border-top:0;
+            // @include rotate(45deg);
+            // box-shadow: 0 0 1px $dark;
+            top: -$triangleWidth;
+            #{$float}: 2 * $triangleWidth;
+        }
+        @include scale(0);
+        > .menu-item {
+            // border: 2px solid fuchsia;
+            vertical-align: top;
+            &:first-child{
+                border-#{$opposite-float}: 1px solid $borderColor;
+            }
+        }
+    }
+    .menu-item {
+        &:hover{
+            .list-l1{
+                @include scale(1);
+            }
+        }
+    }
+    .item-l2{
+        // border:2px solid blue;
+        display: block !important;
+        a {
+            color: $dark !important;
+            font-size: $fontSizeBase !important;
+            &:hover{
+                color: $primary;
+            }
+        }
+    }
+}

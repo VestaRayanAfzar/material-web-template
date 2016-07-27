@@ -1,0 +1,20 @@
+.sidenav.main-sidenav {
+    //position: fixed;
+    //top: $headerHeight;
+    background: transparentize($dark, .01);
+    //z-index: $zIndexHeader + 1;
+    .main-menu {
+        padding-#{$float}: 20px;
+        a {
+            display: block;
+            color: $light;
+            padding: 7px;
+        }
+    }
+    .sub-menu {
+        //background: grey;
+        padding-#{$float}: 20px;
+        margin-#{$float}: 10px;
+        border-#{$float}: 1px solid transparentize($light, .2);
+    }
+}

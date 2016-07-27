@@ -2,6 +2,7 @@ import {IUser} from "../cmn/models/User";
 import {IPermission} from "../cmn/models/Permission";
 import {IRoleGroup} from "../cmn/models/RoleGroup";
 import {IRole} from "../cmn/models/Role";
+import {IExtRootScopeService} from "../ClientApp";
 
 export interface IAclActions {
     [action:string]:boolean;
@@ -15,16 +16,22 @@ interface IStateResourceMap {
     [state:string]:IPermissionCollection;
 }
 
+export enum AclPolicy {Allow = 1, Deny}
+
 export class AuthService {
+    static instance:AuthService = null;
+    static Events = {Login: 'auth-login', Logout: 'auth-logout'};
     private tokenKeyName:string = 'auth-token';
     private userKeyName:string = 'userData';
     private storage:Storage = localStorage;
     private user:IUser = null;
     private permissions:IPermissionCollection = {};
+    private static defaultPolicy:AclPolicy = AclPolicy.Deny;
     public static stateResourceMap:IStateResourceMap = {};
-    public static $inject = [];
+    public static $inject = ['$rootScope'];
 
-    constructor() {
+    constructor(private $rootScope:IExtRootScopeService) {
+        AuthService.instance = this;
         try {
             this.user = JSON.parse(this.storage.getItem(this.userKeyName));
             this.user ? this.login(this.user) : this.logout();
@@ -34,30 +41,21 @@ export class AuthService {
     }
 
     public logout():void {
-        this.storage.removeItem(this.userKeyName);
-        var guest = {
-            id: 0,
-            roleGroups: [{
-                name: 'guest',
-                roles: [
-                    {
-                        name: 'guest', permissions: [{resource: 'account', action: 'login'}]
-                    }
-                ]
-            }]
-        };
-        this.login(guest);
+        this.updateUser(<IUser>{});
+        this.$rootScope.$broadcast(AuthService.Events.Logout, {});
     }
 
     public login(user:IUser) {
-        this.user = user;
-            this.storage.setItem(this.userKeyName, JSON.stringify(user));
-        this.extractPermissions();
+        this.updateUser(user);
+        this.$rootScope.$broadcast(AuthService.Events.Login, {user});
         }
 
     private extractPermissions() {
+        this.permissions = {};
+        if (!this.user.roleGroups) return;
         for (var i = this.user.roleGroups.length; i--;) {
             var roleGroup = <IRoleGroup>this.user.roleGroups[i];
+            if (!roleGroup) continue;
             for (var j = roleGroup.roles.length; j--;) {
                 var role = <IRole>roleGroup.roles[j];
                 for (var k = role.permissions.length; k--;) {
@@ -73,6 +71,12 @@ export class AuthService {
 
     public isLoggedIn():boolean {
         return !!(this.user && this.user.id);
+    }
+
+    public updateUser(user:IUser) {
+        this.user = user;
+        this.storage.setItem(this.userKeyName, JSON.stringify(user));
+        this.extractPermissions();
     }
 
     public getUser() {
@@ -91,14 +95,14 @@ export class AuthService {
      Check if user has access to all actions of all resources
      */
     public hasAccessToState(state:string):boolean {
+        if (!state) return true;
         var requiredPermissions = AuthService.stateResourceMap[state];
-        if (!requiredPermissions) return false;
-        for (var resource in requiredPermissions) {
-            if (requiredPermissions.hasOwnProperty(resource)) {
+        if (!requiredPermissions) return AuthService.defaultPolicy == AclPolicy.Allow;
+        for (let resources = Object.keys(requiredPermissions), i = resources.length; i--;) {
+            let resource = resources[i];
                 var actions = requiredPermissions[resource];
-                for (var i = actions.length; i--;) {
-                    if (!this.isAllowed(resource, actions[i])) return false;
-                }
+            for (let j = actions.length; j--;) {
+                if (!this.isAllowed(resource, actions[j])) return false;
             }
         }
         return true;
@@ -110,6 +114,7 @@ export class AuthService {
     public isAllowed(resource:string, action:string):boolean {
         var userPermissions = this.permissions;
         var userActions = userPermissions[resource] || userPermissions['*'];
+        if (!userActions) return AuthService.defaultPolicy == AclPolicy.Allow;
         return userActions && (userActions.indexOf('*') >= 0 || userActions.indexOf(action) >= 0);
     }
 
@@ -140,5 +145,13 @@ export class AuthService {
      */
     public static registerPermissions(state:string, permissions?:IPermissionCollection) {
         AuthService.stateResourceMap[state] = permissions || {};
+    }
+
+    public static setDefaultPolicy(policy:AclPolicy) {
+        AuthService.defaultPolicy = policy;
+    }
+
+    public static getInstance():AuthService {
+        return AuthService.instance;
     }
 }

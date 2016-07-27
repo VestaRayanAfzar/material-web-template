@@ -1,13 +1,13 @@
 import {IClientAppSetting} from "../config/setting";
 import {ILocale} from "vesta-i18n/ILocale";
 import {I18N} from "vesta-i18n/I18N";
-import {Dictionary} from "vesta-i18n/Dictionary";
+import {Dictionary, IVocabs} from "vesta-i18n/Dictionary";
 import {faIR} from "vesta-locale-fa-ir/fa-IR";
 import {enUS} from "vesta-locale-en-us/en-US";
 import {ApiService} from "./ApiService";
 import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
 import {PersianDate} from "vesta-datetime-persian/PersianDate";
-import GregorianDate from "vesta-datetime-gregorian/GregorianDate";
+import {GregorianDate} from "vesta-datetime-gregorian/GregorianDate";
 
 export class I18nService {
     private i18nLocale:ILocale;

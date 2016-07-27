@@ -35,6 +35,7 @@ export interface IDateInput {
  * @ngdoc directive
  * @name dateInput
  * @restrict A
+ * @element input
  *
  * @param {boolean} show-picker
  */

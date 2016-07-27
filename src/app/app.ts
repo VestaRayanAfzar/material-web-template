@@ -4,9 +4,15 @@ import {ClientApp} from "./ClientApp";
 import {exporter} from "./config/import";
 import {IBaseController} from "./modules/BaseController";
 
-document.addEventListener('DOMContentLoaded', onDeviceReady, false);
+!function onDeviceReady() {
+    var isAppLoaded = onScriptsReady();
+    if (!isAppLoaded) {
+        setTimeout(onDeviceReady, 100);
+    }
+}();
 
-function onDeviceReady() {
+function onScriptsReady() {
+    if (!window['angular']) return false;
     var clientApp = new ClientApp(setting, router);
 
     var sections = ['controller', 'service', 'filter', 'directive', 'component'];
@@ -24,4 +30,5 @@ function onDeviceReady() {
     }
 
     clientApp.bootstrap();
+    return true;
 }

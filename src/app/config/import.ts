@@ -11,6 +11,8 @@ import {AuthService} from "../service/AuthService";
 import {ApiService} from "../service/ApiService";
 import {TranslateService} from "../service/TranslateService";
 import {I18nService} from "../service/I18nService";
+import {AppMenuService} from "../service/AppMenuService";
+import {LogService} from "../service/LogService";
 import {translateFilter} from "../filter/translateFilter";
 import {paginationFilter} from "../filter/paginationFilter";
 import {dateTimeFilter} from "../filter/dateTimeFilter";
@@ -23,26 +25,22 @@ import {viewportSpy} from "../directive/viewportSpy";
 import {metaTags} from "../directive/metaTags";
 import {sidenav} from "../directive/sidenav";
 import {menuTrigger} from "../directive/menuTrigger";
-import {RootController} from "../modules/RootController";
-import {RoleAddController} from "../modules/acl/role/RoleAddController";
-import {RoleController} from "../modules/acl/role/RoleController";
-import {RoleEditController} from "../modules/acl/role/RoleEditController";
-import {RoleGroupController} from "../modules/acl/roleGroup/RoleGroupController";
-import {RoleGroupAddController} from "../modules/acl/roleGroup/RoleGroupAddController";
-import {RoleGroupEditController} from "../modules/acl/roleGroup/RoleGroupEditController";
-import {UserController} from "../modules/acl/user/UserController";
-import {UserAddController} from "../modules/acl/user/UserAddController";
-import {UserEditController} from "../modules/acl/user/UserEditController";
+import {appMenu} from "../directive/appMenu";
+import {carousel} from "../directive/carousel";
 import {HomeController} from "../modules/HomeController";
-import {AboutController} from "../modules/AboutController";
+import {ContentController} from "../modules/content/ContentController";
+import {content} from "../directive/content";
+import {ContentDetailsController} from "../modules/content/ContentDetailsController";
+import {RootController} from "../modules/RootController";
+import {HomeController} from "../modules/HomeController";
+import {AppMenuService} from "../service/AppMenuService";
 ///<vesta:import/>
 
 interface IExporter {
+    controller:any;
     service:any;
     filter:any;
     directive:any;
-    controller:any;
-    component:any;
 }
 
 export const exporter:IExporter = {
@@ -53,6 +51,7 @@ export const exporter:IExporter = {
         authService: AuthService,
         databaseService: DatabaseService,
         formService: FormService,
+        logService: LogService,
         storageService: StorageService,
         appCacheService: AppCacheService,
         notificationService: NotificationService,
@@ -60,6 +59,7 @@ export const exporter:IExporter = {
         datePickerService: DatePickerService,
         metaTagsService: MetaTagsService,
         sidenavService: SidenavService,
+        appMenuService: AppMenuService,
         ///<vesta:ngService/>
     },
     filter: {
@@ -78,24 +78,14 @@ export const exporter:IExporter = {
         metaTags: metaTags,
         sidenav: sidenav,
         menuTrigger: menuTrigger,
+        appMenu: appMenu,
+        content: content,
+        carousel: carousel,
         ///<vesta:ngDirective/>
     },
     controller: {
-        roleController: RoleController,
-        roleAddController: RoleAddController,
-        roleEditController: RoleEditController,
-        roleGroupController: RoleGroupController,
-        roleGroupAddController: RoleGroupAddController,
-        roleGroupEditController: RoleGroupEditController,
-        userController: UserController,
-        userAddController: UserAddController,
-        userEditController: UserEditController,
         rootController: RootController,
         homeController: HomeController,
-        aboutController: AboutController,
-        ///<vesta:ngController/>
-    },
-    component: {
         ///<vesta:ngController/>
     }
 };

@@ -1,6 +1,12 @@
 $layoutSmallMin: 300px;
-$layoutBreak: 680px;
+$layoutSmallMax: 600px;
+$layoutMediumMin: $layoutSmallMax;
+$layoutMediumMax: 800px;
+$layoutLargeMin: $layoutMediumMax;
+$layoutLargeMax: 1366px;
+$layoutXLargeMin: $layoutLargeMax;
 // font
+$fontSizeXSmall: fontSize(.65);
 $fontSizeSmall: fontSize(.85);
 $fontSizeBase: fontSize(1);
 $fontSizeMedium: fontSize(1.25);
@@ -20,7 +26,10 @@ $easeOut: cubic-bezier(0, 0, 0.153, 0.946);
 $easeInOut: cubic-bezier(0.465, 0.183, 0.153, 0.946);
 // zIndex
 $zIndexBase: 1;
-$zIndexDialog: 9;
-$zIndexDatePicker: 99;
+$zIndexSidenav: 90;
+$zIndexMainHeader: 91;
+$zIndexDialog: 92;
+$zIndexDatePicker: 92;
 //
-$button-border-radius: 5px;
+$borderRadius: 5px;
+$button-border-radius: $borderRadius;

@@ -6,7 +6,7 @@ export interface IClientAppSetting extends IVariantClientAppSetting {
     locale:string;
 }
 
-export var setting:IClientAppSetting = {
+export let setting:IClientAppSetting = {
     name: 'materialWebTemplate',
     version: {
         app: '0.1.0',
@@ -14,7 +14,7 @@ export var setting:IClientAppSetting = {
     },
     locale: 'fa-IR',
     api: VariantClientAppSetting.api,
-    static: VariantClientAppSetting.static,
+    asset: VariantClientAppSetting.asset,
     env: VariantClientAppSetting.env,
     cache: VariantClientAppSetting.cache,
     viewport: VariantClientAppSetting.viewport

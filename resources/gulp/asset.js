@@ -2,13 +2,13 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     htmlmin = require('gulp-htmlmin'),
-    imageop = require('gulp-image-optimization'),
+    // imageop = require('gulp-image-optimization'),
     inline = require('gulp-inline-angular-templates'),
     fse = require('fs-extra');
 
 module.exports = function (dir, setting) {
 
-    var tmpDirectory = dir.build + '/tmp/img';
+    // var tmpDirectory = dir.build + '/tmp/img';
     var tplTempDirectory = dir.build + '/tmp/tpl';
 
     gulp.task('asset:html', function () {
@@ -30,7 +30,7 @@ module.exports = function (dir, setting) {
     gulp.task('asset:template', ['asset:etc'], function () {
         findInFileAndReplace(dir.buildWeb + '/offline.manifest', '__DATE__', getDate());
         if (setting.production) {
-            findInFileAndReplace(dir.buildWeb + '/index.html', '<base href="/"/>', '<base href="/arman/"/>');
+            // findInFileAndReplace(dir.buildWeb + '/index.html', '<base href="/"/>', '<base href="/arman/"/>');
         } else {
             // removing offline manifest in dev mode
             findInFileAndReplace(dir.buildWeb + '/index.html', 'manifest="offline.manifest"', '');
@@ -75,17 +75,17 @@ module.exports = function (dir, setting) {
             .pipe(gulp.dest(dir.buildWeb + '/img'));
     });
 
-    gulp.task('asset:image:optimize', function () {
-        var stream = gulp.src(dir.src + '/images/**/*');
-        if (setting.production) {
-         stream = stream.pipe(imageop({
-                optimizationLevel: 5,
-                progressive: true,
-                interlaced: true
-         })).on('error', setting.error);
-        }
-        return stream.pipe(gulp.dest(tmpDirectory));
-    });
+    // gulp.task('asset:image:optimize', function () {
+    //     var stream = gulp.src(dir.src + '/images/**/*');
+    //     if (setting.production) {
+    //         stream = stream.pipe(imageop({
+    //             optimizationLevel: 5,
+    //             progressive: true,
+    //             interlaced: true
+    //         })).on('error', setting.error);
+    //     }
+    //     return stream.pipe(gulp.dest(tmpDirectory));
+    // });
 
     gulp.task('asset:watch', function () {
         gulp.watch([dir.src + '/*.html', dir.src + '/app/templates/**/*.html'], ['asset:template']);

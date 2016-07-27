@@ -1,0 +1,72 @@
+<div class="page" id="signup-page">
+    <header>
+        <img src="img/tmp/register.jpg" alt="Register">
+    </header>
+    <form name="vm.userForm" ng-submit="vm.signup()" novalidate>
+        <h2 class="heading">ثبت نام</h2>
+        <h3>اطلاعات شخصی شما</h3>
+        <div class="section" >
+            <div class="input-container">
+                <label for="firstName">firstName</label>
+                <input name="firstName" id="firstName" ng-model="vm.user.firstName" ng-model-options="{ debounce: 500 }"
+                       minlength="2"/>
+                <div ng-messages="vm.userForm.firstName.$dirty && vm.userForm.firstName.$error">
+                    <div ng-message="minLength">Characters must be longer than 2</div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="lastName">lastName</label>
+                <input name="lastName" id="lastName" ng-model="vm.user.lastName" ng-model-options="{ debounce: 500 }"
+                       minlength="2"/>
+                <div ng-messages="vm.userForm.lastName.$dirty && vm.userForm.lastName.$error">
+                    <div ng-message="minLength">Characters must be longer than 2</div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="email">email</label>
+                <input name="email" id="email" ng-model="vm.user.email" ng-model-options="{ debounce: 500 }"/>
+                <div ng-messages="vm.userForm.email.$dirty && vm.userForm.email.$error">
+                    <div ng-message="unique">Duplicate Entry</div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="phone">phone</label>
+                <input name="phone" id="phone" ng-model="vm.user.phone" ng-model-options="{ debounce: 500 }"/>
+                <div ng-messages="vm.userForm.phone.$dirty && vm.userForm.phone.$error">
+                    <div ng-message="required">phone required</div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="fax">fax</label>
+                <input name="fax" id="fax" ng-model="vm.user.fax" ng-model-options="{ debounce: 500 }"/>
+                <div ng-messages="vm.userForm.fax.$dirty && vm.userForm.fax.$error">
+                    <div ng-message="required">fax required</div>
+                </div>
+            </div>
+        </div>
+        <h3>آدرس</h3>
+        <div class="section">
+        </div>
+        <h3>رمز عبور شما</h3>
+        <div class="section">
+            <div class="input-container">
+                <label for="password">password</label>
+                <input name="password" id="password" ng-model="vm.user.password" ng-model-options="{ debounce: 500 }"
+                       minlength="4" required/>
+                <div ng-messages="vm.userForm.password.$dirty && vm.userForm.password.$error">
+                    <div ng-message="required">This field is required</div>
+                    <div ng-message="minLength">Characters must be longer than 4</div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="confirmPassword">confirmPassword</label>
+                <input name="confirmPassword" id="confirmPassword" ng-model="vm.user.confirmPassword"
+                       ng-model-options="{ debounce: 500 }"
+                       minlength="4" required/>
+                <div ng-messages="vm.userForm.confirmPassword.$dirty && vm.userForm.confirmPassword.$error">
+                    <div ng-message="required">password is not math</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

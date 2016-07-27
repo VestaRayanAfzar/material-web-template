@@ -1,7 +1,7 @@
 .sidenav {
     position: fixed;
     #{$float}: 0;
-    z-index: 9;
+    z-index: $zIndexMainHeader;
     top: 0;
     bottom: 0;
     width: 50%;
@@ -9,14 +9,7 @@
     background: $light;
     transition: all $transitionMediumDuration;
     overflow: auto;
-    li {
-        margin: 10px;
-        a {
-            display: block;
-            padding: 7px 12px 7px 0;
-            border-bottom: 1px solid $borderColor;
-        }
-    }
+
     @include translate3d(100%, 0, 0);
     &.sidenav-open {
         @include translate3d(0, 0, 0);
@@ -24,7 +17,7 @@
     @include mediaQueryBelow {
         width: 75vw;
     }
-    @include mediaQuery(0, ($layoutBreak + $layoutSmallMin)/2) {
+    @include mediaQuerySmall {
         width: 100%;
         max-width: none;
     }

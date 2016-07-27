@@ -1,0 +1,71 @@
+$indicatorWidth: 25%;
+%absolute-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .crsl-wrapper {
+        @extend %absolute-fill;
+        overflow: hidden;
+        text-align: center;
+        .crsl-item {
+            @extend %absolute-fill;
+            background: fixed center;
+            background-size: cover;
+            transition: all 3*$transitionLongDuration;
+            @include translate3d(5px, 0, 0);
+            opacity: 0;
+            &.in {
+                @include translate3d(0, 0, 0);
+                opacity: 1;
+            }
+        }
+    }
+    .crsl-indicator {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        #{$opposite-float}: 0;
+        width: $indicatorWidth;
+        background: transparentize(silver, .7);
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        user-select: none;
+        .crsl-ind-item {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            transition: all 3*$transitionLongDuration;
+            > div {
+                position: absolute;
+                width: 100%;
+                bottom: 5%;
+            }
+            h3 {
+                margin: 10px 0;
+            }
+            p {
+                color: lighten($dark, 20%);
+            }
+            a {
+                //display: inline-block;
+                width: 50%;
+            }
+            &.selected {
+                background: transparentize(white, .1);
+                h3 {
+                    color: $primary;
+                }
+            }
+        }
+    }
+}

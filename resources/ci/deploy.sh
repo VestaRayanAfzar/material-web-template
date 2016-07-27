@@ -2,13 +2,36 @@
 
 CLONE_PATH=$1
 DEPLOY_PATH=$2
+NGINX_PATH=/etc/nginx/conf.d/website.conf
+NODE_PKG_CACHE_PATH=/tmp/vestaWebSite_node_modules
 WD=`pwd`
+counter=0
 
-counter=1
+npm_install(){
+  BACKUP_PATH=${NODE_PKG_CACHE_PATH}_${1}
+
+  if [ -d ${BACKUP_PATH} ]; then
+    cp -R ${BACKUP_PATH} node_modules
+  fi
+
+  if [ $1 == "production" ]; then
+    npm install --no-progress --production
+  else
+    npm install --no-progress
+  fi;
+
+  if [ -d ${BACKUP_PATH} ]; then
+    rm -rf ${BACKUP_PATH}
+  fi
+
+  cp -R node_modules ${BACKUP_PATH}
+}
+
 print_status(){
-  echo
-  echo "## ${counter}:    $1"
   ((counter=counter+1))
+  echo
+  echo "${counter}:    $1"
+  echo
 }
 
 cd "$CLONE_PATH"
@@ -20,14 +43,21 @@ git submodule foreach git checkout master
 mv resources/gitignore/src/app/config/setting.var.ts src/app/config/setting.var.ts
 
 print_status "Installing Node Packages"
-npm install --no-progress
+#npm install --no-progress
+npm_install dev
 print_status "Running Deploy Tasks"
 gulp deploy
-#sed -i 's/base href="\/"/base href="\/arman\/"/' build/app/html/index.html This is done in gulp>asset:template
+
+print_status "Configuring NGINX"
+cd ${WD}
+mv ${CLONE_PATH}/resources/docker/nginx.conf ${NGINX_PATH}
+cd ${CLONE_PATH}
 
 print_status "Installing Node Packages for Web Server"
+cp package.json build/app/server/package.json
 cd build/app/server
-npm install --production --no-progress
+#npm install --production --no-progress
+npm_install production
 
 cd "$WD"
 if [ -d "$DEPLOY_PATH" ]; then

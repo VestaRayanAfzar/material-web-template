@@ -8,8 +8,7 @@ export interface IViewportSpyScope extends IScope {
 
 export interface IViewport {
     isDevice:boolean;
-    isAbove:boolean;
-    isBelow:boolean;
+    isSmallOrMedium:boolean;
     /*is:(tag:string)=>boolean;
      isOneOf:(...tags:Array<string>)=>boolean;*/
 }
@@ -25,8 +24,7 @@ export class ViewportSpyController {
                 private Setting:IClientAppSetting) {
         $rootScope.vp = {
             isDevice: false,
-            isAbove: true,
-            isBelow: false/*,
+            isSmallOrMedium: false/*,
              is: this.is.bind(this),
              isOneOf: this.isOneOf.bind(this)*/
         };
@@ -77,19 +75,28 @@ export class ViewportSpyController {
                 clearTimeout(timer);
                 return timer = setTimeout(resizeSpy, delay);
             }
-            this.viewportClasses = [];
+            // this.viewportClasses = [];
             var width = document.documentElement.clientWidth,
                 sizes = this.Setting.viewport;
-            if (width > sizes.Break) {
-                this.$rootScope.vp.isAbove = true;
-                this.$rootScope.vp.isBelow = false;
+            if (width > sizes.Large) {
+                // this.viewportClasses.push('xlarge');
+                this.$rootScope.vp.isSmallOrMedium = false;
+            } else if (width > sizes.Medium) {
+                // this.viewportClasses.push('large');
+                this.$rootScope.vp.isSmallOrMedium = false;
+            } else if (width > sizes.Small) {
+                // this.viewportClasses.push('medium');
+                // this.viewportClasses.push('small-medium');
+                this.$rootScope.vp.isSmallOrMedium = true;
             } else {
-                this.$rootScope.vp.isAbove = false;
-                this.$rootScope.vp.isBelow = true;
+                // this.viewportClasses.push('small');
+                // this.viewportClasses.push('small-medium');
+                this.$rootScope.vp.isSmallOrMedium = true;
             }
             if (!this.$rootScope.$$phase) {
                 this.$rootScope.$apply();
             }
+            // console.log(this.viewportClasses);
         };
         resizeSpy(null);
         window.addEventListener('resize', resizeSpy, false);
@@ -99,7 +106,7 @@ export class ViewportSpyController {
     }
 
     public is(tag:string):boolean {
-        console.log(`calling is(${tag}): ${this.deviceClasses.indexOf(tag) >= 0 || this.viewportClasses.indexOf(tag) >= 0}`);
+        // console.log(`calling is(${tag}): ${this.deviceClasses.indexOf(tag) >= 0 || this.viewportClasses.indexOf(tag) >= 0}`);
         return this.deviceClasses.indexOf(tag) >= 0 || this.viewportClasses.indexOf(tag) >= 0;
     }
 

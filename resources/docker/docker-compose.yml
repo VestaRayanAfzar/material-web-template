@@ -5,8 +5,8 @@ services:
   web:
     image: vesta/pm2
     restart: always
-    expose:
-      - 8088
+    ports:
+      - '8088:8088'
     networks:
       - network
     volumes:

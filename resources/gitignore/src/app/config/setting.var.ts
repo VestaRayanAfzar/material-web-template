@@ -1,23 +1,27 @@
 export interface IVariantClientAppSetting {
     env:string;
     api:string;
-    static:string;
+    asset:string;
     cache:{
         api:number;
     };
     viewport:{
-        Break:number;
+        Small:number;
+        Medium:number;
+        Large:number;
     }
 }
 
-export var VariantClientAppSetting:IVariantClientAppSetting = {
-    env: 'development',
+export let VariantClientAppSetting:IVariantClientAppSetting = {
+    env: 'production',
     api: 'http://localhost:3000/api/v1',
-    static: 'http://localhost:8000/assets',
+    asset: 'http://localhost:8000/asset',
     cache: {
-        api: 10
+        api: 0
     },
     viewport: {
-        Break: 680
+        Small: 425,
+        Medium: 768,
+        Large: 1024
     }
 };

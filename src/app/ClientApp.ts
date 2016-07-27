@@ -1,19 +1,27 @@
-import {IRootScopeService, IModule, IAngularEvent, IAngularBootstrapConfig, ILocationProvider} from "angular";
+import {
+    IRootScopeService,
+    IModule,
+    IAngularEvent,
+    IAngularBootstrapConfig,
+    ILocationProvider,
+    IHttpProvider
+} from "angular";
 import {IState, IStateService, IStateProvider, IUrlRouterProvider} from "angular-ui-router";
 import {IClientAppSetting} from "./config/setting";
 import {IRouteFunction} from "./config/route";
-import {AuthService} from "./service/AuthService";
-import {StorageService} from "./service/StorageService";
+import {AuthService, AclPolicy} from "./service/AuthService";
 import {NetworkService} from "./service/NetworkService";
 import {I18nService} from "./service/I18nService";
 import {IViewport} from "./directive/viewportSpy";
 import {AppCacheService} from "./service/AppCacheService";
 import {ILocale} from "vesta-i18n/ILocale";
-import {IUser} from "./cmn/models/User";
+import {IUser, User} from "./cmn/models/User";
 import {IQueryResult, IQueryRequest} from "vesta-schema/ICRUDResult";
 import {ApiService} from "./service/ApiService";
-import {Err} from "vesta-util/Err";
 import {RootController} from "./modules/RootController";
+import {PrimaryAppMenu, SecondaryAppMenu} from "./config/app-menu";
+import {AppMenuService} from "./service/AppMenuService";
+import {Err} from "vesta-util/Err";
 
 export interface IExtRootScopeService extends IRootScopeService {
     rvm:RootController;
@@ -21,32 +29,56 @@ export interface IExtRootScopeService extends IRootScopeService {
     locale:ILocale;
     pageTitle:string;
     isDeviceOrSmall:boolean;
+    user:IUser;
 }
 
 export class ClientApp {
+    public static Setting:IClientAppSetting;
     public module:IModule;
 
     constructor(private setting:IClientAppSetting, router:IRouteFunction) {
+        ClientApp.Setting = setting;
         this.init(router);
     }
 
+    /**
+     * This method is equivalent to angular.module.config & angular.module.run
+     */
     private init(router:IRouteFunction) {
-        this.module = angular.module(this.setting.name, ['ngMessages', 'ui.router', 'ngMaterial', 'md.data.table']);
+        this.module = angular.module(this.setting.name, ['ngMessages', 'ui.router', 'ngMaterial', 'md.data.table', 'uiGmapgoogle-maps']);
         this.module.constant('Setting', this.setting);
         // CONFIG
-        this.module.config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
-            function ($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider) {
+        AppMenuService.setMenuItems('primary-menu', PrimaryAppMenu);
+        AppMenuService.setMenuItems('secondary-menu', SecondaryAppMenu);
+        AuthService.setDefaultPolicy(AclPolicy.Deny);
+        this.module.config(['$stateProvider', '$locationProvider', '$urlRouterProvider', '$httpProvider',
+            function ($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider, $httpProvider:IHttpProvider) {
+                $httpProvider.useApplyAsync(true);
                 router($stateProvider, $locationProvider, $urlRouterProvider);
             }]);
+        this.module.config(['uiGmapGoogleMapApiProvider', (uiGmapGoogleMapApiProvider)=> {
+            uiGmapGoogleMapApiProvider.configure({
+                //    key: 'your api key',
+                libraries: 'weather,geometry,visualization',
+                language: 'fa-IR'
+            });
+        }]);
+        /**
+         * Initiating common services; These services are likely to be injected everywhere
+         * After this, these services can be used by their `getInstance` method. e.g AuthService.getInstance()
+         * This action will cause the DI on class names to be much shorter => increasing the readability
+         */
+        this.module.run(['apiService', 'authService', 'logService', 'formService', 'notificationService', (apiService, authService, logService, formService, notificationService)=> {
+        }]);
         // RUN
-        this.module.run(['$rootScope', 'authService', '$state', 'storageService', 'networkService', 'i18nService', 'appCacheService', 'apiService',
-            ($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService, storageService:StorageService, networkService:NetworkService, i18nService:I18nService, appCacheService:AppCacheService, apiService:ApiService)=> {
+        this.module.run(['$rootScope', '$state', 'networkService', 'i18nService', 'appCacheService',
+            ($rootScope:IExtRootScopeService, $state:IStateService, networkService:NetworkService, i18nService:I18nService, appCacheService:AppCacheService)=> {
                 $rootScope.locale = i18nService.get();
-                this.aclCheck($rootScope, authService, $state);
+                this.aclCheck($rootScope, $state);
                 this.connectionWatcher(networkService);
                 appCacheService.update();
-                this.checkAuthStatus(authService, apiService, $state);
-            }])
+                this.checkAuthStatus($state);
+            }]);
     }
 
     /**
@@ -56,35 +88,29 @@ export class ClientApp {
      2) Some time user data exists in localStorage however the server session database is cleared.
      So from client side point of view user is authenticated. However the token does not exist on serverSide.
 
-     The /account (GET) edge is responsible to returns the authenticated user data in case the token is valid
+     The /me (GET) edge is responsible to returns the authenticated user data in case the token is valid.
+     In case there is no token or user is not authenticated the guest user will be returned.
      */
-    private checkAuthStatus(authService:AuthService, apiService:ApiService, $state:IStateService) {
-        var isLoggedIn = authService.isLoggedIn();
-        apiService.get<IQueryRequest<IUser>, IQueryResult<IUser>>('account')
+    private checkAuthStatus($state:IStateService) {
+        let authService = AuthService.getInstance();
+        ApiService.getInstance().get<IQueryRequest<IUser>, IQueryResult<IUser>>('me')
             .then(result=> {
-                var hasData = result.items && result.items.length;
-                // 1)
-                if (!isLoggedIn && hasData) {
-                    authService.login(result.items[0]);
-                }
-                // 2)
-                if (isLoggedIn && !hasData) {
-                    authService.logout();
-                    $state.go('login');
-                }
+                if (result.error || !result.items || !result.items.length) throw result.error;
+                var me = new User(result.items[0]);
+                authService.login(me);
             })
             .catch(err=> {
-                // 2)
-                if (/*isLoggedIn && */[Err.Code.Unauthorized, Err.Code.Forbidden].indexOf(err.code) >= 0) {
+                console.error('ClientApp.checkAuthStatus', err);
+                if (err.code !== Err.Code.NoDataConnection) {
                     authService.logout();
                     $state.go('login');
                 }
             })
     }
 
-    private aclCheck($rootScope:IExtRootScopeService, authService:AuthService, $state:IStateService) {
+    private aclCheck($rootScope:IExtRootScopeService, $state:IStateService) {
         $rootScope.$on('$stateChangeStart', (event:IAngularEvent, toState:IState)=> {
-            if (!authService.hasAccessToState(toState.name)) {
+            if (!AuthService.getInstance().hasAccessToState(toState.name)) {
                 event.preventDefault();
                 console.log(`Prevent from going to forbidden state "${toState.name}"`);
                 return false;
@@ -104,7 +130,7 @@ export class ClientApp {
     public bootstrap() {
         var isProduction = this.setting.env == 'production';
         var bsConfig:IAngularBootstrapConfig = {
-            strictDi: !isProduction,
+            strictDi: isProduction,
             debugInfoEnabled: !isProduction
         };
         angular.bootstrap(document, [this.setting.name], bsConfig);

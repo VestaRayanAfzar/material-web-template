@@ -1,3 +1,4 @@
 module.exports = {
-    httpServer: 'http://localhost'
+    httpServer: 'http://192.168.99.100',
+    base: 'vesta'
 };

@@ -6,7 +6,7 @@ import {StorageService} from "./StorageService";
 import {NetworkService} from "./NetworkService";
 
 export interface IFileKeyValue {
-    [key:string]:File|Blob
+    [key:string]:File|Blob|Array<File|Blob>;
 }
 
 interface IOfflineRequest<T> {
@@ -25,6 +25,7 @@ interface IOnBeforeSendResult<T> {
 }
 
 export class ApiService {
+    private static instance:ApiService;
     private endPoint:string = '';
     private offlineRequests = [];
     static $inject = ['$http', 'Setting', 'authService', '$q', 'storageService', 'networkService'];
@@ -35,10 +36,11 @@ export class ApiService {
         this.endPoint = Setting.api;
         this.enableCache = !!Setting.cache.api;
         if (!(this.endPoint.charAt(this.endPoint.length - 1) == '/')) this.endPoint += '/';
+        ApiService.instance = this;
     }
 
     private hashRequest<T>(method:string, edge:string, data:T) {
-        var hashing = new jsSHA('SHA-1', 'TEXT');
+        let hashing = new jsSHA('SHA-1', 'TEXT');
         hashing.update(JSON.stringify({
             method: method,
             edge: edge,
@@ -48,7 +50,7 @@ export class ApiService {
     }
 
     private errorHandler<T>(response):Err {
-        var resError,
+        let resError,
             error = new Err();
         if (!response || !response.data) {
             error = new Err(Err.Code.NoDataConnection);
@@ -57,7 +59,7 @@ export class ApiService {
         } else if (response.error) {
             resError = response.error;
         }
-        for (var key in resError) {
+        for (let key in resError) {
             if (resError.hasOwnProperty(key)) {
                 error[key] = resError[key];
             }
@@ -69,9 +71,10 @@ export class ApiService {
     }
 
     private requestHandler<T>(reqHash:string, req:IHttpPromise<any>):IPromise<T> {
-        var deferred = this.$q.defer<T>();
+        let deferred = this.$q.defer<T>();
         req.then((response)=> {
                 if (!response || !response.data) return deferred.reject(new Err(Err.Code.NoDataConnection));
+            if (response.data.error) throw response;
             this.extractToken(response);
                 this.onAfterReceive<T>(reqHash, response);
                 deferred.resolve(response.data);
@@ -83,7 +86,7 @@ export class ApiService {
     }
 
     private onBeforeSend<T>(method:string, edge:string, data:T):IOnBeforeSendResult<T> {
-        var result:IOnBeforeSendResult<T> = {
+        let result:IOnBeforeSendResult<T> = {
             tobeContinue: this.networkService.isOnline(),
             reqHash: ('upload' == method || 'delete' == method) ? '' : this.hashRequest<T>(method, edge, data)
         };
@@ -91,7 +94,7 @@ export class ApiService {
             result.error = new Err(Err.Code.NoDataConnection);
             return result;
         }
-        var token = this.authService.getToken();
+        let token = this.authService.getToken();
         result.reqConfig = {headers: {}};
         if (token) {
             result.reqConfig.headers['X-Auth-Token'] = token;
@@ -100,47 +103,53 @@ export class ApiService {
     }
 
     private onAfterReceive<T>(reqHash:string, response):void {
-        var data = response.data;
+        let data = response.data;
         if (data && reqHash && this.enableCache) {
             this.storageService.set<T>(reqHash, data);
         }
     }
 
     private extractToken(response) {
-        var tkn = response.headers('X-Auth-Token');
+        let tkn = response.headers('X-Auth-Token');
         if (tkn) {
             this.authService.setToken(tkn);
         }
     }
 
     private loadOffline<T>(reqHash:string):IPromise<T> {
-        var data = this.storageService.get<T>(reqHash);
+        let data = this.storageService.get<T>(reqHash);
         return data ? this.$q.resolve(data) : this.$q.reject(new Err(Err.Code.NoDataConnection));
     }
 
     public get<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('get', edge, data),
+        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('get', edge, data),
             urlData = data ? `?${window['param'](data)}` : '';
         if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
         return this.requestHandler<U>(config.reqHash, this.$http.get(this.endPoint + edge + '?' + urlData.substr(1), config.reqConfig));
     }
 
     public post<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('post', edge, data);
+        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('post', edge, data);
         if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
         data = data || <T>{};
         return this.requestHandler<U>(config.reqHash, this.$http.post(this.endPoint + edge, data, config.reqConfig));
     }
 
     public upload<T extends Object, U>(edge:string, files:IFileKeyValue, data?:T):IPromise<U> {
-        var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('upload', edge, null),
+        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('upload', edge, null),
             fd = new FormData();
         if (!config.tobeContinue) return this.$q.reject(new Err(Err.Code.NoDataConnection));
         if (data) {
             fd.append('data', JSON.stringify(data));
         }
-        for (var fileName in files) {
-            if (files.hasOwnProperty(fileName)) {
+        for (let i = 0, keys = Object.keys(files), il = keys.length; i < il; i++) {
+            let fileName = keys[i];
+            if (files[fileName] instanceof Array) {
+                let fileList = <Array<File>> files[fileName];
+                for (let j = fileList.length; j--;) {
+                    fd.append(fileName, fileList[j]);
+                }
+            } else {
                 fd.append(fileName, files[fileName]);
             }
         }
@@ -150,15 +159,19 @@ export class ApiService {
     }
 
     public put<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('put', edge, data);
+        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('put', edge, data);
         if (!config.tobeContinue) return this.loadOffline(config.reqHash);
         data = data || <T>{};
         return this.requestHandler<U>(config.reqHash, this.$http.put(this.endPoint + edge, data, config.reqConfig));
     }
 
     public delete<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        var config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('delete', edge, data);
-        data = data || <T>{};
-        return this.requestHandler<U>(config.reqHash, this.$http.post(this.endPoint + edge, data, config.reqConfig));
+        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('delete', edge, data),
+            urlData = data ? `?${window['param'](data)}` : '';
+        return this.requestHandler<U>(config.reqHash, this.$http.delete(`${this.endPoint}${edge}?${urlData}`, config.reqConfig));
+    }
+
+    public static getInstance():ApiService {
+        return ApiService.instance || null;
     }
 }

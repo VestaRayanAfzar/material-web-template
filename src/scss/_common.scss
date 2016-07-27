@@ -2,23 +2,26 @@
 @import "misc/colors";
 @import "misc/variables";
 @import "misc/mixins";
-///<vesta:scssFont/>
+
 @import "fonts/material-design";
-///<vesta:scssLibrary/>
+///<vesta:scssFont/>
 @import "lib/reset/html5doctor/v1.6.1";
 @import "lib/angular-material/1.0.7/_angular-material";
 @import "lib/md-data-table/md-data-table";
-///<vesta:scssElement/>
+///<vesta:scssLibrary/>
 @import "elements/global";
 @import "elements/animation";
+///<vesta:scssElement/>
+@import "components/frame";
 ///<vesta:scssComponent/>
-@import 'components/_frame';
-///<vesta:scssDirective/>
-@import 'directives/sidenav';
-@import 'directives/menu-trigger';
-@import 'directives/date-picker';
+@import "directives/sidenav";
+@import "directives/carousel";
+@import "directives/menu-trigger";
+@import "directives/date-picker";
 @import "directives/round-image";
+///<vesta:scssDirective/>
+@import "pages/common";
+@import "pages/base";
+@import "pages/home";
+@import "pages/about";
 ///<vesta:scssPage/>
-@import 'pages/about';
-@import 'pages/home';
-@import 'pages/base';

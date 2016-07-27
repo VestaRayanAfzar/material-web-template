@@ -33,7 +33,7 @@ export class ServerApp {
             res.contentType('text/cache-manifest');
             res.sendFile(`${this.setting.dir.html}/offline.manifest`);
         });
-        this.app.use('/upl', express.static(this.setting.dir.upload));
+        this.app.use('/asset', express.static(this.setting.dir.upload));
         this.app.use(express.static(this.setting.dir.html));
         this.app.use((req, res, next) => {
             if (/.+\.(html|htm|js|css|xml|png|jpg|jpeg|gif|pdf|txt|ico|woff|woff2|svg|eot|ttf|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent)$/i.exec(req.url)) {
