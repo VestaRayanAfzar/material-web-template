@@ -1,21 +1,19 @@
 .sidenav {
     position: fixed;
     #{$float}: 0;
-    z-index: $zIndexMainHeader;
-    top: 0;
+    z-index: 9;
+    top: $headerHeight;
     bottom: 0;
-    width: 50%;
-    max-width: 256px;
+    width: $sidenavWidth;
+    max-width: $sidenavWidth;
     background: $light;
-    transition: all $transitionMediumDuration;
-    overflow: auto;
+    transition: all $transitionMediumDuration $easeInOut;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     @include translate3d(100%, 0, 0);
     &.sidenav-open {
         @include translate3d(0, 0, 0);
-    }
-    @include mediaQueryBelow {
-        width: 75vw;
     }
     @include mediaQuerySmall {
         width: 100%;

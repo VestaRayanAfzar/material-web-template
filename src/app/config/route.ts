@@ -24,49 +24,8 @@ export function router($stateProvider:IStateProvider, $locationProvider:ILocatio
         url: '/logout',
         views: {
             'master': {
-                templateUrl: 'tpl/login.html',
+                templateUrl: 'tpl/account/logout.html',
                 controller: 'logoutController',
-                controllerAs: 'vm'
-            }
-        }
-    });
-    // ACL
-    $stateProvider.state('acl', {
-        url: '/acl',
-        views: {
-            'master': {
-                templateUrl: 'tpl/acl/acl.html',
-                controller: 'aclController',
-                controllerAs: 'vm'
-            }
-        }
-    });
-    $stateProvider.state('acl.role', {
-        url: '/role',
-        views: {
-            'acl-content@acl': {
-                templateUrl: 'tpl/acl/role/role.html',
-                controller: 'roleController',
-                controllerAs: 'vm'
-            }
-        }
-    });
-    $stateProvider.state('acl.roleGroup', {
-        url: '/roleGroup',
-        views: {
-            'acl-content@acl': {
-                templateUrl: 'tpl/acl/roleGroup/roleGroup.html',
-                controller: 'roleGroupController',
-                controllerAs: 'vm'
-            }
-        }
-    });
-    $stateProvider.state('acl.user', {
-        url: '/user',
-        views: {
-            'acl-content@acl': {
-                templateUrl: 'tpl/acl/user/user.html',
-                controller: 'userController',
                 controllerAs: 'vm'
             }
         }

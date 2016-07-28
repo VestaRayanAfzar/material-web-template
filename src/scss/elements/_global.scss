@@ -14,8 +14,6 @@ body {
     line-height: 1.2;
     background: $bodyBgColor;
     color: $dark;
-    background: url("../img/main-bg.jpg") no-repeat center fixed;
-    background-size: cover;
 }
 
 h1 {
@@ -53,11 +51,42 @@ a {
     font-family: Verdana, sans-serif;
     direction: ltr;
 }
-[ui-view=master]{
-    background: $bodyBgColor;
+
+.checkbox-item {
+    display: inline-block;
+    margin-#{$opposite-float}: 15px;
 }
 
-.checkbox-item{
+.heading {
+    color: $primary;
+    margin-top: 30px;
+}
+
+.input-container {
     display: inline-block;
-    margin-#{$opposite-float}: 15px ;
+    label {
+        display: block;
+        color: $darkGray;
+    }
+    input, textarea, select {
+        display: block;
+        border: solid 1px $silver;
+        height: 30px;
+        padding: 5px;
+    }
+}
+
+// material
+.md-input-wrapper {
+    [ng-messages] {
+        color: $error !important;
+        font-size: 12px;
+    }
+    md-chips .md-chips {
+        margin-bottom: 18px;
+    }
+}
+
+md-autocomplete[md-floating-label] md-input-container {
+    padding-bottom: 0;
 }

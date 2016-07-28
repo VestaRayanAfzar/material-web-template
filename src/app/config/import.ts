@@ -27,13 +27,10 @@ import {sidenav} from "../directive/sidenav";
 import {menuTrigger} from "../directive/menuTrigger";
 import {appMenu} from "../directive/appMenu";
 import {carousel} from "../directive/carousel";
-import {HomeController} from "../modules/HomeController";
-import {ContentController} from "../modules/content/ContentController";
-import {content} from "../directive/content";
-import {ContentDetailsController} from "../modules/content/ContentDetailsController";
 import {RootController} from "../modules/RootController";
 import {HomeController} from "../modules/HomeController";
-import {AppMenuService} from "../service/AppMenuService";
+import {AboutController} from "../modules/AboutController";
+import {LoginController} from "../modules/account/LoginController";
 ///<vesta:import/>
 
 interface IExporter {
@@ -79,13 +76,14 @@ export const exporter:IExporter = {
         sidenav: sidenav,
         menuTrigger: menuTrigger,
         appMenu: appMenu,
-        content: content,
         carousel: carousel,
         ///<vesta:ngDirective/>
     },
     controller: {
         rootController: RootController,
         homeController: HomeController,
+        aboutController: AboutController,
+        loginController: LoginController,
         ///<vesta:ngController/>
     }
 };

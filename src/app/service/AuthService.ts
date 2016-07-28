@@ -20,7 +20,7 @@ export enum AclPolicy {Allow = 1, Deny}
 
 export class AuthService {
     static instance:AuthService = null;
-    static Events = {Login: 'auth-login', Logout: 'auth-logout'};
+    static Events = {Update: 'auth-update'};
     private tokenKeyName:string = 'auth-token';
     private userKeyName:string = 'userData';
     private storage:Storage = localStorage;
@@ -34,23 +34,23 @@ export class AuthService {
         AuthService.instance = this;
         try {
             this.user = JSON.parse(this.storage.getItem(this.userKeyName));
-            this.user ? this.login(this.user) : this.logout();
+            this.updatePermissions();
         } catch (e) {
             this.logout();
         }
     }
 
     public logout():void {
-        this.updateUser(<IUser>{});
-        this.$rootScope.$broadcast(AuthService.Events.Logout, {});
+        this.login(<IUser>{});
     }
 
     public login(user:IUser) {
-        this.updateUser(user);
-        this.$rootScope.$broadcast(AuthService.Events.Login, {user});
+        this.user = user;
+        this.storage.setItem(this.userKeyName, JSON.stringify(user));
+        this.updatePermissions();
         }
 
-    private extractPermissions() {
+    private updatePermissions() {
         this.permissions = {};
         if (!this.user.roleGroups) return;
         for (var i = this.user.roleGroups.length; i--;) {
@@ -67,16 +67,11 @@ export class AuthService {
                 }
             }
         }
+        this.$rootScope.$broadcast(AuthService.Events.Update, {user: this.user});
         }
 
-    public isLoggedIn():boolean {
-        return !!(this.user && this.user.id);
-    }
-
-    public updateUser(user:IUser) {
-        this.user = user;
-        this.storage.setItem(this.userKeyName, JSON.stringify(user));
-        this.extractPermissions();
+    public isGuest():boolean {
+        return !(this.user && this.user.id);
     }
 
     public getUser() {

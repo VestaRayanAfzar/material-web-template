@@ -1,6 +1,6 @@
 {
   "name": "materialWebTemplate",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Proveided by Vesta Rayan Afzar",
   "keywords": [
     "Code Generator",
@@ -21,25 +21,25 @@
     "browse": "node node_modules/gulp/bin/gulp --gulpfile resources/gulp/run.js browse"
   },
   "bugs": {
-    "url": "https://github.com/hbtb/materialWebTemplate/issues",
+    "url": "https://github.com/VestaRayanAfzar/materialWebTemplate/issues",
     "email": "bishehsary@gmail.com"
   },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hbtb/materialWebTemplate.git"
+    "url": "git+https://github.com/VestaRayanAfzar/materialWebTemplate.git"
   },
   "dependencies": {
-    "angular": "^1.5.3",
-    "angular-animate": "^1.5.3",
-    "angular-aria": "^1.5.3",
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
     "angular-material": "^1.0.7",
     "angular-material-data-table": "^0.10.9",
-    "angular-messages": "^1.5.3",
-    "angular-ui-router": "^0.2.18",
-    "express": "^4.13.4",
+    "angular-messages": "^1.5.8",
+    "angular-ui-router": "^0.3.1",
+    "express": "^4.14.0",
     "jquery-param": "^0.2.0",
-    "jssha": "^2.0.2",
+    "jssha": "^2.2.0",
     "md-font": "^2.2.3",
     "morgan": "^1.7.0",
     "vesta-datetime": "^0.2.7",
@@ -48,30 +48,30 @@
     "vesta-i18n": "^0.3.3",
     "vesta-locale-en-us": "^0.2.5",
     "vesta-locale-fa-ir": "^0.2.4",
-    "vesta-schema": "^0.4.3",
+    "vesta-schema": "^0.4.5",
     "vesta-util": "^0.2.7"
   },
   "devDependencies": {
-    "autoprefixer": "^6.3.3",
-    "browser-sync": "^2.11.1",
-    "css-mqpacker": "^4.0.0",
-    "csswring": "^4.2.1",
-    "doiuse": "^2.3.0",
-    "fs-extra": "^0.28.0",
+    "autoprefixer": "^6.3.7",
+    "browser-sync": "^2.13.0",
+    "css-mqpacker": "^5.0.1",
+    "csswring": "^5.1.0",
+    "doiuse": "^2.4.1",
+    "fs-extra": "^0.30.0",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.0",
-    "gulp-develop-server": "^0.5.1",
-    "gulp-htmlmin": "^1.3.0",
+    "gulp-develop-server": "^0.5.2",
+    "gulp-htmlmin": "^2.0.0",
     "gulp-inline-angular-templates": "^0.1.5",
-    "gulp-postcss": "^6.1.0",
-    "gulp-sass": "^2.2.0",
+    "gulp-postcss": "^6.1.1",
+    "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-typescript": "^2.11.0",
-    "gulp-uglify": "^1.5.3",
-    "postcss-reporter": "^1.3.3",
-    "stylelint": "^6.2.2",
-    "stylelint-config-standard": "^6.0.0",
-    "yamljs": "^0.2.7"
+    "gulp-typescript": "^2.13.6",
+    "gulp-uglify": "^1.5.4",
+    "postcss-reporter": "^1.4.1",
+    "stylelint": "^7.0.3",
+    "stylelint-config-standard": "^11.0.0",
+    "yamljs": "^0.2.8"
   }
 }

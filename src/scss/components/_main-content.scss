@@ -1,0 +1,5 @@
+.main-content {
+    [ui-view="master"] {
+        @extend %animated-horizontal;
+    }
+}

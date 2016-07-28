@@ -3,7 +3,7 @@
 CLONE_PATH=$1
 DEPLOY_PATH=$2
 NGINX_PATH=/etc/nginx/conf.d/website.conf
-NODE_PKG_CACHE_PATH=/tmp/vestaWebSite_node_modules
+NODE_PKG_CACHE_PATH=/tmp/webSite_node_modules
 WD=`pwd`
 counter=0
 

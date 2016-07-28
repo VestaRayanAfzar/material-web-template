@@ -7,8 +7,8 @@ services:
     volumes:
       - .:/app
     ports:
-      - '8089:8088'
-      - '8890:5858'
+      - '8088:8088'
+      - '5858:5858'
     working_dir: /app
     command: npm run serve
     environment:

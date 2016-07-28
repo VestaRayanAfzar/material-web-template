@@ -17,6 +17,7 @@ export class LoginController extends BaseController {
     constructor(private $state:IStateService) {
         super();
         this.user = new User();
+        this.metaTagsService.setTitle('Login');
     }
 
     public login() {

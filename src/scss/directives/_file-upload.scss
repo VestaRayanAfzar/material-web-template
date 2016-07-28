@@ -1,3 +1,4 @@
+$delBtnWidth: 24px;
 .file-upload {
     min-height: 32px;
     width: 100%;
@@ -7,8 +8,39 @@
     padding: 10px;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.file-wrapper {
+    flex: 1;
+    border: 5px solid $borderColor;
+    margin: 5px;
+    border-radius: $borderRadius;
+    position: relative;
     > img {
         max-width: 100%;
         height: auto;
+    }
+    > .del-btn {
+        position: absolute;
+        top: -1 * floor($delBtnWidth / 2);
+        #{$float}: -1 * floor($delBtnWidth / 2);
+        cursor: pointer;
+        width: $delBtnWidth;
+        height: $delBtnWidth;
+        border-radius: 50%;
+        font-size: $fontSizeLarge;
+        text-align: center;
+        background: white;
+        //font-weight: bold;
+        color: $error;
+        line-height: $delBtnWidth;
+        font-family: Tahoma, serif;
+        @include scale(1);
+        transition: transform $transitionMediumDuration;
+        &:hover {
+            @include scale(1.2);
+        }
     }
 }

@@ -2,12 +2,12 @@ import {MetaTagsController} from "../directive/metaTags";
 import {IExtRootScopeService} from "../ClientApp";
 
 export class MetaTagsService {
+    private static instance:MetaTagsService;
     private tagController:MetaTagsController;
-    private q:Array<Function> = [];
     public static $inject = ['$rootScope'];
 
     constructor(private $rootScope:IExtRootScopeService) {
-
+        MetaTagsService.instance = this;
     }
 
     public register(controller:MetaTagsController) {
@@ -24,5 +24,9 @@ export class MetaTagsService {
 
     public setKeywords(...keywords:Array<string>) {
         this.tagController.update('keywords', keywords.join(','));
+    }
+
+    public static getInstance() {
+        return MetaTagsService.instance;
     }
 }

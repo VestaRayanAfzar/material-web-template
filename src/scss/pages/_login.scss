@@ -1,0 +1,47 @@
+#login-page {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    > form {
+        border-radius: $button-border-radius;
+        display: block;
+        position: relative;
+        width: 400px;
+        margin: auto;
+        background: transparentize($dark, .2);
+        color: $light;
+        text-align: center;
+        h1 {
+            padding: 10px 0;
+            font-size: $fontSizeXXLarge;
+        }
+        label {
+            color: $light;
+            display: block;
+            text-align: start;
+            padding: 7px 0 5px;
+        }
+        input {
+            width: 100%;
+            background: $light;
+            border-radius: $button-border-radius;
+            padding: 7px;
+            border: 2px solid $light;
+            outline: 0;
+            font-size: $fontSizeMedium;
+            &.ng-dirty.ng-invalid {
+                border-bottom-color: $error;
+            }
+        }
+    }
+    .form-els {
+        padding: 20px;
+        > div {
+            //border: 1px solid red;
+            margin: 10px 0;
+        }
+    }
+    .form-actions {
+        padding: 10px 0 20px 0;
+    }
+}

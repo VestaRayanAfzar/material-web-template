@@ -2,26 +2,32 @@
 @import "misc/colors";
 @import "misc/variables";
 @import "misc/mixins";
-
 @import "fonts/material-design";
 ///<vesta:scssFont/>
 @import "lib/reset/html5doctor/v1.6.1";
 @import "lib/angular-material/1.0.7/_angular-material";
-@import "lib/md-data-table/md-data-table";
+@import "lib/md-data-table/0.10.9/md-data-table";
 ///<vesta:scssLibrary/>
 @import "elements/global";
 @import "elements/animation";
 ///<vesta:scssElement/>
 @import "components/frame";
+@import "components/main-header";
+@import 'components/main-content';
+@import "components/main-footer";
+@import "components/main-sidenav";
 ///<vesta:scssComponent/>
-@import "directives/sidenav";
+@import "directives/app-menu";
 @import "directives/carousel";
-@import "directives/menu-trigger";
 @import "directives/date-picker";
+@import "directives/file-upload";
+@import "directives/menu-trigger";
 @import "directives/round-image";
+@import "directives/sidenav";
 ///<vesta:scssDirective/>
+@import "pages/root";
 @import "pages/common";
-@import "pages/base";
 @import "pages/home";
 @import "pages/about";
+@import "pages/login";
 ///<vesta:scssPage/>

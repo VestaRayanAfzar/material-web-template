@@ -29,9 +29,7 @@ module.exports = function (dir, setting) {
 
     gulp.task('asset:template', ['asset:etc'], function () {
         findInFileAndReplace(dir.buildWeb + '/offline.manifest', '__DATE__', getDate());
-        if (setting.production) {
-            // findInFileAndReplace(dir.buildWeb + '/index.html', '<base href="/"/>', '<base href="/arman/"/>');
-        } else {
+        if (!setting.production) {
             // removing offline manifest in dev mode
             findInFileAndReplace(dir.buildWeb + '/index.html', 'manifest="offline.manifest"', '');
         }

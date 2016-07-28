@@ -1,6 +1,9 @@
-<div class="pane" id="home-page">
+<div class="page" id="home-page">
     <h1 class="text-center">{{'Welcome to Vesta world'|tr}}</h1>
     <br>
     <h2>{{vm.date|dateTime:'l d M Y'}}</h2>
     <p><a ui-sref="about">{{'About us'|tr}}</a></p>
+    <br>
+    <p ng-if="!user.id"><a ui-sref="login">Login</a></p>
+    <p ng-if="user.id"><a href="" ng-click="rvm.logout()">Logout</a></p>
 </div>

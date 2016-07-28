@@ -7,7 +7,7 @@
   "author": "Vesta Rayan Afzar",
   "license": "VESTA",
   "dependencies": {
-    "express": "^4.13.4",
+    "express": "^4.14.0",
     "morgan": "^1.7.0"
   }
 }

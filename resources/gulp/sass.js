@@ -34,14 +34,14 @@ module.exports = function (dir, setting) {
         if (setting.production) {
             preprocessors.push(mqpacker);
             preprocessors.push(csswring);
-        return gulp.src(tmpDirectory + '/*.css')
-            .pipe(postCss(preprocessors))
-            .on('error', setting.error)
-            .pipe(gulp.dest(dir.buildWeb + '/css'))
+            return gulp.src(tmpDirectory + '/*.css')
+                .pipe(postCss(preprocessors))
+                .on('error', setting.error)
+                .pipe(gulp.dest(dir.buildWeb + '/css'))
         }
     });
 
-    /*gulp.task('sass:analyse', ['sass:compile'], function () {
+    gulp.task('sass:analyse', ['sass:compile'], function () {
         var preprocessors = [
             autoPrefixer({browsers: browsersToSupport}),
             stylelint(),
@@ -53,7 +53,7 @@ module.exports = function (dir, setting) {
             .pipe(postCss(preprocessors))
             .on('error', setting.error)
             .pipe(gulp.dest(tmpDirectory + '/analyze'))
-    });*/
+    });
 
     gulp.task('sass:watch', function () {
         return gulp.watch(dir.src + '/scss/**/*.scss', ['sass:postCss']);

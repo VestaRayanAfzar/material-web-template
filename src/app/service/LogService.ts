@@ -3,46 +3,38 @@ import {ClientApp} from "../ClientApp";
 import {NotificationService} from "./NotificationService";
 
 export class LogService {
+    private static LogType = {Log: 'log', Info: 'info', Warn: 'warn', Error: 'error'};
     private static instance:LogService = null;
-    public static $inject = ['apiService', 'notificationService'];
     private isProduction = true;
+    public static $inject = ['apiService', 'notificationService'];
 
     constructor(private apiService:ApiService, private notificationService:NotificationService) {
         LogService.instance = this;
         this.isProduction = ClientApp.Setting.env === 'production';
     }
 
-    public log(log:any) {
+    private echo(logType:string, location:string, log:any) {
         if (this.isProduction) {
             // todo what to do ???
         } else {
-            console.log(log);
+            console[logType](location, log);
         }
     }
 
-    public warn(log:any) {
-        if (this.isProduction) {
-            // todo what to do ???
-        } else {
-            console.warn(log);
+    public log(location:string, log:any) {
+        this.echo(LogService.LogType.Log, location, log);
         }
+
+    public warn(location:string, warning:any) {
+        this.echo(LogService.LogType.Warn, location, warning);
     }
 
-    public info(log:any) {
-        if (this.isProduction) {
-            // todo what to do ???
-        } else {
-            console.info(log);
-        }
+    public info(location:string, information:any) {
+        this.echo(LogService.LogType.Info, location, information);
     }
 
-    public error(err:Error, desc:string) {
-        if (this.isProduction) {
-            // todo what to do ???
-        } else {
-            console.error(err);
-
-        }
+    public error(location:string, error:any) {
+        this.echo(LogService.LogType.Error, location, error);
     }
 
     public static getInstance():LogService {

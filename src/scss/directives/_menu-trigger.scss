@@ -1,4 +1,4 @@
-$triggerHeight: 64px;
+$triggerHeight: ceil($headerHeight/2);
 $triggerBarHeight: ceil($triggerHeight / 6);
 $rotationDegree: 45deg;
 
@@ -7,7 +7,7 @@ $rotationDegree: 45deg;
     width: $triggerHeight;
     height: $triggerHeight;
     position: absolute;
-    top: floor($triggerHeight / 2);
+    top: floor(($headerHeight - $triggerHeight) / 2);
     right: 10px;
     cursor: pointer;
     z-index: 2;
@@ -71,16 +71,5 @@ $rotationDegree: 45deg;
     &.closed {
         animation-name: anim-open-trigger;
 
-    }
-    @include mediaQueryAbove {
-        display: none;
-    }
-}
-
-.is-device {
-    .menu-trigger {
-        @include mediaQueryAbove {
-            display: inline-block;
-        }
     }
 }

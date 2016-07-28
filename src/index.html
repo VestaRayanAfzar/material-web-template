@@ -15,10 +15,26 @@
     <link rel="icon" type="image/png" href="favicon.ico">
     <link rel="stylesheet" href="css/app-rtl.css">
 </head>
-<body viewport-spy>
 
-<div ng-controller="rootController as rvm" class="pane" id="base-page">
-    <div class="pane" ui-view="master"></div>
+<body viewport-spy>
+<div ng-controller="rootController as rvm" class="pane" id="root-page">
+    <header class="main-header">
+        <menu-trigger component-id="'main-sidenav'"></menu-trigger>
+        <div class="logo-wrapper en">
+            <a ui-sref="home"><img src="img/vesta-logo-white.png" alt="Vesta Logo"></a>
+        </div>
+    </header>
+    <main class="main-content">
+        <div ui-view="master"></div>
+        <sidenav component-id="'main-sidenav'" close-event="'$stateChangeSuccess'">
+            <app-menu component-id="'main-menu'"></app-menu>
+        </sidenav>
+        <footer class="main-footer">
+            <p class="en">&copy; 2016, All rights reserved for
+                <a href="https://vestarayanafzar.com" target="_blank">Vesta Rayan Afzar</a>
+            </p>
+        </footer>
+    </main>
 </div>
 
 <script src="js/lib.js" async></script>

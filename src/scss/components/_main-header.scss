@@ -1,0 +1,14 @@
+.main-header {
+    background: transparentize($dark, .05);
+    $logoOffset: 10px;
+    .logo-wrapper {
+        position: absolute;
+        top: $logoOffset;
+        left: floor($logoOffset / 2);
+        height: $headerHeight - (2 * $logoOffset);
+        img {
+            height: 100%;
+            width: auto;
+        }
+    }
+}

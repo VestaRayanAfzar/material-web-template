@@ -1,9 +1,7 @@
+import {IQService, IPromise, IDeferred} from "angular";
 import {IMenuItem} from "../config/app-menu";
 import {AuthService} from "./AuthService";
 import {AppMenuController} from "../directive/appMenu";
-import IPromise = angular.IPromise;
-import IQService = angular.IQService;
-import IDeferred = angular.IDeferred;
 
 export interface IMenuWithController {
     ctrl:AppMenuController;
@@ -19,29 +17,13 @@ interface IDeferredQ {
 }
 
 export class AppMenuService {
-    private static menuItems:IMenuStorage = {};
+    private static menuItems:{[componentId:string]:Array<IMenuItem>} = {};
+    private static menus:IMenuStorage = {};
     private deferredRequests:IDeferredQ = {};
     public static $inject = ['authService', '$q'];
 
     constructor(private authService:AuthService, private $q:IQService) {
 
-    }
-
-    /**
-     * If a menu has not registered it's controller, the promise will wait until it does, and then
-     *  all those deferred wil be resolved
-     */
-    public getMenu(id:string):IPromise<IMenuWithController> {
-        let menu = AppMenuService.menuItems[id];
-        if (!menu.items) return this.$q.reject(`No menu items has been set for ${id}`);
-        if (!menu.ctrl) {
-            // console.log(`enqueing the request for menu: ${id}`);
-            if (!this.deferredRequests[id]) this.deferredRequests[id] = [];
-            let defer = this.$q.defer<IMenuWithController>();
-            this.deferredRequests[id].push(defer);
-            return defer.promise;
-        }
-        return this.$q.resolve(menu);
     }
 
     private extractMenu(items:Array<IMenuItem>):Array<IMenuItem> {
@@ -72,23 +54,43 @@ export class AppMenuService {
      * each menu of application will register it's items by this method
      */
     public static setMenuItems(id:string, items:Array<IMenuItem>) {
-        if (!AppMenuService.menuItems[id]) AppMenuService.menuItems[id] = <IMenuWithController>{};
-        AppMenuService.menuItems[id].items = items;
+        if (!AppMenuService.menus[id]) AppMenuService.menus[id] = <IMenuWithController>{};
+        AppMenuService.menuItems[id] = items;
     }
 
     /**
      * Each menuItem directive will register it's controller here
      *  after registering this method checks if there are any deferred request for this menu and resolve them
      */
-    public setController(id:string, ctrl:AppMenuController) {
-        if (!AppMenuService.menuItems[id]) AppMenuService.menuItems[id] = <IMenuWithController>{};
-        AppMenuService.menuItems[id].ctrl = ctrl;
+    public register(id:string, ctrl:AppMenuController) {
+        var menu = AppMenuService.menus[id];
+        if (!menu) AppMenuService.menus[id] = <IMenuWithController>{};
+        menu.ctrl = ctrl;
         if (this.deferredRequests[id]) {
             let defer = this.deferredRequests[id];
             delete this.deferredRequests[id];
+            menu.items = this.extractMenu(AppMenuService.menuItems[id]);
             for (let i = 0, il = defer.length; i < il; ++i) {
-                defer[i].resolve(AppMenuService.menuItems[id]);
+                defer[i].resolve(menu);
             }
         }
+    }
+
+    /**
+     * If a menu has not registered it's controller, the promise will wait until it does, and then
+     *  all those deferred wil be resolved
+     */
+    public get(id:string, forceController = false):IPromise<IMenuWithController> {
+        let items = AppMenuService.menuItems[id];
+        if (!items) return this.$q.reject(`No menu items has been set for ${id}. Use AppMenuService.setMenuItem`);
+        let menu = AppMenuService.menus[id];
+        if (!menu.ctrl && forceController) {
+            if (!this.deferredRequests[id]) this.deferredRequests[id] = [];
+            let defer = this.$q.defer<IMenuWithController>();
+            this.deferredRequests[id].push(defer);
+            return defer.promise;
+        }
+        menu.items = this.extractMenu(AppMenuService.menuItems[id]);
+        return this.$q.resolve(menu);
     }
 }

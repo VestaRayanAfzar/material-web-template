@@ -13,31 +13,12 @@ export class AppMenuController {
 
     constructor(private $scope:IMainMenuScope, private $element:IAugmentedJQuery, private appMenuService:AppMenuService) {
         $element.addClass(this.componentId);
-        this.appMenuService.setController(this.componentId, this);
-        appMenuService.getMenu(this.componentId).then(menu=> this.menuItems = menu.items);
+        this.appMenuService.register(this.componentId, this);
+        appMenuService.get(this.componentId).then(menu=> this.menuItems = menu.items);
     }
 
-    public update() {
-        let html = '';
-        for (let i = 0, il = this.menuItems.length; i < il; ++i) {
-            html += this.generateHtml(this.menuItems[i], 0);
-        }
-        let menuListElement = this.$element[0].querySelector('ul');
-        if (menuListElement) {
-            menuListElement.innerHTML = html;
-        }
-    }
-
-    private generateHtml(menuItem:IMenuItem, level:number):string {
-        var hasChild = menuItem.children && menuItem.children.length;
-        let html = `<li class="menu-item item-l${level}${hasChild ? ' has-child' : ''}"><a href="${menuItem.url}">${menuItem.title}</a>`;
-        if (!hasChild) return html + '</li>';
-        html += `<ul class="menu-list list-l${level + 1}">`;
-        for (let i = 0, il = menuItem.children.length; i < il; ++i) {
-            html += this.generateHtml(menuItem.children[i], level + 1);
-        }
-        html += '</ul></li>';
-        return html;
+    public update(menuItems:Array<IMenuItem>) {
+        this.menuItems = menuItems;
     }
 }
 

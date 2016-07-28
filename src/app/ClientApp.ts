@@ -19,8 +19,8 @@ import {IUser, User} from "./cmn/models/User";
 import {IQueryResult, IQueryRequest} from "vesta-schema/ICRUDResult";
 import {ApiService} from "./service/ApiService";
 import {RootController} from "./modules/RootController";
-import {PrimaryAppMenu, SecondaryAppMenu} from "./config/app-menu";
 import {AppMenuService} from "./service/AppMenuService";
+import {AppMenu} from "./config/app-menu";
 import {Err} from "vesta-util/Err";
 
 export interface IExtRootScopeService extends IRootScopeService {
@@ -45,30 +45,22 @@ export class ClientApp {
      * This method is equivalent to angular.module.config & angular.module.run
      */
     private init(router:IRouteFunction) {
-        this.module = angular.module(this.setting.name, ['ngMessages', 'ui.router', 'ngMaterial', 'md.data.table', 'uiGmapgoogle-maps']);
+        this.module = angular.module(this.setting.name, ['ngMessages', 'ui.router', 'ngMaterial', 'md.data.table']);
         this.module.constant('Setting', this.setting);
         // CONFIG
-        AppMenuService.setMenuItems('primary-menu', PrimaryAppMenu);
-        AppMenuService.setMenuItems('secondary-menu', SecondaryAppMenu);
-        AuthService.setDefaultPolicy(AclPolicy.Deny);
+        AppMenuService.setMenuItems('main-menu', AppMenu);
+        AuthService.setDefaultPolicy(AclPolicy.Allow);
         this.module.config(['$stateProvider', '$locationProvider', '$urlRouterProvider', '$httpProvider',
             function ($stateProvider:IStateProvider, $locationProvider:ILocationProvider, $urlRouterProvider:IUrlRouterProvider, $httpProvider:IHttpProvider) {
                 $httpProvider.useApplyAsync(true);
                 router($stateProvider, $locationProvider, $urlRouterProvider);
             }]);
-        this.module.config(['uiGmapGoogleMapApiProvider', (uiGmapGoogleMapApiProvider)=> {
-            uiGmapGoogleMapApiProvider.configure({
-                //    key: 'your api key',
-                libraries: 'weather,geometry,visualization',
-                language: 'fa-IR'
-            });
-        }]);
         /**
          * Initiating common services; These services are likely to be injected everywhere
          * After this, these services can be used by their `getInstance` method. e.g AuthService.getInstance()
          * This action will cause the DI on class names to be much shorter => increasing the readability
          */
-        this.module.run(['apiService', 'authService', 'logService', 'formService', 'notificationService', (apiService, authService, logService, formService, notificationService)=> {
+        this.module.run(['apiService', 'authService', 'logService', 'formService', 'notificationService', 'metaTagsService', (apiService, authService, logService, formService, notificationService, metaTagsService)=> {
         }]);
         // RUN
         this.module.run(['$rootScope', '$state', 'networkService', 'i18nService', 'appCacheService',
@@ -109,8 +101,9 @@ export class ClientApp {
     }
 
     private aclCheck($rootScope:IExtRootScopeService, $state:IStateService) {
+        let authService = AuthService.getInstance();
         $rootScope.$on('$stateChangeStart', (event:IAngularEvent, toState:IState)=> {
-            if (!AuthService.getInstance().hasAccessToState(toState.name)) {
+            if (!authService.hasAccessToState(toState.name)) {
                 event.preventDefault();
                 console.log(`Prevent from going to forbidden state "${toState.name}"`);
                 return false;

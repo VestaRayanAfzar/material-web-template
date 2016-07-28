@@ -1,10 +1,10 @@
-$layoutSmallMin: 300px;
-$layoutSmallMax: 600px;
-$layoutMediumMin: $layoutSmallMax;
-$layoutMediumMax: 800px;
-$layoutLargeMin: $layoutMediumMax;
-$layoutLargeMax: 1366px;
-$layoutXLargeMin: $layoutLargeMax;
+$layoutSmallMin: 320px;
+$layoutSmallMax: 425px;
+$layoutMediumMin: $layoutSmallMax + 1;
+$layoutMediumMax: 768;
+$layoutLargeMin: $layoutMediumMax + 1;
+$layoutLargeMax: 1024px;
+$layoutXLargeMin: $layoutLargeMax + 1;
 // font
 $fontSizeXSmall: fontSize(.65);
 $fontSizeSmall: fontSize(.85);
@@ -19,7 +19,7 @@ $borderColor: #c9c9c9;
 // timing
 $transitionShortDuration: 150ms;
 $transitionMediumDuration: 300ms;
-$transitionLongDuration: 600ms;
+$transitionLongDuration: 500ms;
 // easing
 $easeIn: cubic-bezier(0.465, 0.183, 1, 1);
 $easeOut: cubic-bezier(0, 0, 0.153, 0.946);
@@ -27,9 +27,14 @@ $easeInOut: cubic-bezier(0.465, 0.183, 0.153, 0.946);
 // zIndex
 $zIndexBase: 1;
 $zIndexSidenav: 90;
-$zIndexMainHeader: 91;
+$zIndexHeader: 91;
 $zIndexDialog: 92;
 $zIndexDatePicker: 92;
 //
 $borderRadius: 5px;
+$headerHeight: 64px;
+$footerHeight: 32px;
+$sidenavWidth: 256px;
+// material
+$font-family: $baseFontFamily;
 $button-border-radius: $borderRadius;

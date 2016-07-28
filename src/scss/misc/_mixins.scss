@@ -65,7 +65,19 @@
 }
 
 @mixin mediaQueryMedium() {
-    @include mediaQuery($layoutSmallMax + 1, $layoutMediumMax) {
+    @include mediaQuery($layoutMediumMin, $layoutMediumMax) {
+        @content;
+    }
+}
+
+@mixin mediaQueryLarge() {
+    @include mediaQuery($layoutLargeMin, $layoutLargeMax) {
+        @content;
+    }
+}
+
+@mixin mediaQueryXLarge() {
+    @include mediaQuery($layoutXLargeMin) {
         @content;
     }
 }
@@ -76,20 +88,20 @@
     }
 }
 
-@mixin mediaQueryLarge() {
-    @include mediaQuery($layoutMediumMax + 1, $layoutXLargeMin) {
-        @content;
-    }
-}
-
-@mixin mediaQueryXLarge() {
-    @include mediaQuery($layoutXLargeMin + 1) {
-        @content;
-    }
-}
-
 @mixin mediaQueryAbove() {
-    @include mediaQuery($layoutMediumMax + 1) {
+    @include mediaQuery($layoutLargeMin) {
+        @content;
+    }
+}
+
+@mixin mediaQueryLandscape() {
+    @media screen and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin mediaQueryPortrait() {
+    @media screen and (orientation: portrait) {
         @content;
     }
 }

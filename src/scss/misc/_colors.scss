@@ -16,12 +16,14 @@ $orange: #FF9800;
 $deepOrange: #FF5722;
 $brown: #795548;
 $grey: #9E9E9E;
+$silver: #c9c9c9;
+$darkGray: #6a6a6a;
 $blueGrey: #607D8B;
 $black: #000000;
 $white: #FFFFFF;
 //
-$primary: #ff9900;
-$secondary: #0AA9D1;
+$primary: $orange;
+$secondary: $teal;
 $light: $white;
 $dark: #333333;
 $success: $green;
@@ -29,3 +31,7 @@ $error: $red;
 $info: $blue;
 $warning: $amber;
 //
+$light: darken($white, .2);
+$semiLight: darken($white, .4);
+$dark: lighten($black, .2);
+$semiDark: lighten($black, .4);

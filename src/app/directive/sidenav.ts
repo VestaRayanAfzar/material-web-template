@@ -1,7 +1,6 @@
 import {IScope, IDirective, IAugmentedJQuery, IAttributes} from "angular";
 import {IExtRootScopeService} from "../ClientApp";
 import {SidenavService} from "../service/SidenavService";
-import {IMenuItem} from "../config/app-menu";
 
 export interface ISidenavScope extends IScope {
 }
@@ -12,15 +11,14 @@ export class SidenavController {
     private classList:DOMTokenList;
     public componentId:string;
     public closeEvent:string;
-    public menuItems:Array<IMenuItem> = [];
     private bodyClassName:string;
     public static $inject = ['$scope', '$element', '$rootScope', 'sidenavService'];
 
     constructor(private $scope:ISidenavScope, private $element:IAugmentedJQuery, private $rootScope:IExtRootScopeService,
                 private sidenavService:SidenavService) {
         this.classList = $element[0].classList;
-        this.bodyClassName = `${this.componentId}-${SidenavController.SIDENAV_OPEN_CLASS_NAME}`;
-        sidenavService.add(this);
+        this.bodyClassName = `${this.componentId}-open`;
+        sidenavService.register(this);
         this.classList.add(this.componentId);
         var remover = $rootScope.$on(this.closeEvent, ()=>this.close());
         $rootScope.$on('$destroy', ()=> remover());
@@ -47,10 +45,6 @@ export class SidenavController {
 
     public isOpen():boolean {
         return this.classList.contains(SidenavController.SIDENAV_OPEN_CLASS_NAME);
-    }
-
-    public setMenu(menuItems:Array<IMenuItem>) {
-        this.menuItems = menuItems;
     }
 }
 
