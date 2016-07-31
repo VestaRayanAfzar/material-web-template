@@ -20,16 +20,6 @@ export function router($stateProvider:IStateProvider, $locationProvider:ILocatio
             }
         }
     });
-    $stateProvider.state('logout', {
-        url: '/logout',
-        views: {
-            'master': {
-                templateUrl: 'tpl/account/logout.html',
-                controller: 'logoutController',
-                controllerAs: 'vm'
-            }
-        }
-    });
     // The Rest
     $stateProvider.state('home', {
         url: '/',
