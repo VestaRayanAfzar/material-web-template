@@ -3,17 +3,19 @@
         <h1>Vesta Platform</h1>
         <div class="form-els">
             <div>
-                <label for="username">Username</label>
-                <input type="text" name="username" ng-model="vm.user.username" id="username" required dir="ltr"/>
+                <input type="text" name="username" ng-model="vm.user.username" id="username" required dir="ltr"
+                       placeholder="Username"/>
+                <md-icon>person</md-icon>
             </div>
             <div>
-                <label for="password">Password</label>
-                <input type="password" name="password" ng-model="vm.user.password" id="password" dir="ltr" minlength="4" required>
+                <input type="password" name="password" ng-model="vm.user.password" id="password" dir="ltr" minlength="4"
+                       required placeholder="Password">
+                <md-icon>lock</md-icon>
             </div>
         </div>
-        <div class="form-actions">
+
+        <div class="form-footer">
             <md-button type="submit" class="md-primary md-raised">Login</md-button>
         </div>
-
     </form>
 </div>

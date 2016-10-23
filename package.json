@@ -39,7 +39,6 @@
     "angular-ui-router": "^0.3.1",
     "express": "^4.14.0",
     "jquery-param": "^0.2.0",
-    "jssha": "^2.2.0",
     "md-font": "^2.2.3",
     "morgan": "^1.7.0",
     "vesta-datetime": "^0.2.7",
@@ -48,7 +47,7 @@
     "vesta-i18n": "^0.3.3",
     "vesta-locale-en-us": "^0.2.5",
     "vesta-locale-fa-ir": "^0.2.4",
-    "vesta-schema": "^0.4.5",
+    "vesta-schema": "^0.5.0",
     "vesta-util": "^0.2.7"
   },
   "devDependencies": {

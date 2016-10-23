@@ -1,55 +1,37 @@
-import {IPromise, IQService, IHttpService, IHttpPromise, IRequestShortcutConfig} from "angular";
+import {IPromise, IQService, IHttpService, IHttpPromise, IRequestShortcutConfig, IDeferred} from "angular";
 import {Err} from "vesta-util/Err";
-import {IClientAppSetting} from "../config/setting";
 import {AuthService} from "./AuthService";
-import {StorageService} from "./StorageService";
 import {NetworkService} from "./NetworkService";
+import {ClientApp} from "../ClientApp";
 
 export interface IFileKeyValue {
-    [key:string]:File|Blob|Array<File|Blob>;
+    [key: string]: File|Blob|Array<File|Blob>;
 }
 
-interface IOfflineRequest<T> {
-    type:string;
-    edge:string;
-    data:T;
-    date:number;
+interface IOnBeforeSendResult {
+    error: Err;
+    reqConfig: IRequestShortcutConfig;
+    canceler: IDeferred<string>;
 }
 
-interface IOnBeforeSendResult<T> {
-    tobeContinue:boolean;
-    error?:Err,
-    reqConfig?:IRequestShortcutConfig;
-    data?:T;
-    reqHash:string;
+interface ICancellablePromise<T> extends IPromise<T> {
+    cancel: ()=>void;
 }
 
 export class ApiService {
-    private static instance:ApiService;
-    private endPoint:string = '';
-    private offlineRequests = [];
-    static $inject = ['$http', 'Setting', 'authService', '$q', 'storageService', 'networkService'];
-    private enableCache:boolean;
+    private static instance: ApiService;
+    private endPoint: string = '';
+    static $inject = ['$http', 'authService', '$q', 'networkService'];
+    private enableCache: boolean;
 
-    constructor(private $http:IHttpService, private Setting:IClientAppSetting, private authService:AuthService,
-                private $q:IQService, private storageService:StorageService, private networkService:NetworkService) {
-        this.endPoint = Setting.api;
-        this.enableCache = !!Setting.cache.api;
-        if (!(this.endPoint.charAt(this.endPoint.length - 1) == '/')) this.endPoint += '/';
+    constructor(private $http: IHttpService, private authService: AuthService, private $q: IQService, private networkService: NetworkService) {
+        this.endPoint = ClientApp.Setting.api;
+        this.enableCache = !!ClientApp.Setting.cache.api;
+        if (!/\/$/.exec(this.endPoint)) this.endPoint += '/';
         ApiService.instance = this;
     }
 
-    private hashRequest<T>(method:string, edge:string, data:T) {
-        let hashing = new jsSHA('SHA-1', 'TEXT');
-        hashing.update(JSON.stringify({
-            method: method,
-            edge: edge,
-            data: data
-        }));
-        return hashing.getHash('HEX');
-    }
-
-    private errorHandler<T>(response):Err {
+    private errorHandler(response): Err {
         let resError,
             error = new Err();
         if (!response || !response.data) {
@@ -66,47 +48,44 @@ export class ApiService {
         }
         error.message = error.message || 'Something goes wrong!';
         error.code = error.code || Err.Code.Unknown;
-        // if (error.code == Err.Code.Unauthorized) this.authService.logout();
         return error;
     }
 
-    private requestHandler<T>(reqHash:string, req:IHttpPromise<any>):IPromise<T> {
+    private requestHandler<T>(req: IHttpPromise<any>, canceler: IDeferred<any>): ICancellablePromise<T> {
         let deferred = this.$q.defer<T>();
         req.then((response)=> {
                 if (!response || !response.data) return deferred.reject(new Err(Err.Code.NoDataConnection));
             if (response.data.error) throw response;
             this.extractToken(response);
-                this.onAfterReceive<T>(reqHash, response);
+            // this.onAfterReceive<T>(response);
                 deferred.resolve(response.data);
         }).catch(response=> {
             this.extractToken(response);
             deferred.reject(this.errorHandler(response))
         });
-        return deferred.promise;
+        (<ICancellablePromise<T>>deferred.promise).cancel = ()=> {
+            canceler.resolve();
+        };
+        return <ICancellablePromise<T>>deferred.promise;
     }
 
-    private onBeforeSend<T>(method:string, edge:string, data:T):IOnBeforeSendResult<T> {
-        let result:IOnBeforeSendResult<T> = {
-            tobeContinue: this.networkService.isOnline(),
-            reqHash: ('upload' == method || 'delete' == method) ? '' : this.hashRequest<T>(method, edge, data)
-        };
-        if (!result.tobeContinue) {
+    private onBeforeSend(): IOnBeforeSendResult {
+        let tobeContinue = this.networkService.isOnline();
+        let result: IOnBeforeSendResult = <IOnBeforeSendResult>{};
+        if (!tobeContinue) {
             result.error = new Err(Err.Code.NoDataConnection);
             return result;
         }
+        // token
         let token = this.authService.getToken();
         result.reqConfig = {headers: {}};
         if (token) {
             result.reqConfig.headers['X-Auth-Token'] = token;
         }
+        // enabling canceling request
+        result.canceler = this.$q.defer<any>();
+        result.reqConfig.timeout = result.canceler.promise;
         return result;
-    }
-
-    private onAfterReceive<T>(reqHash:string, response):void {
-        let data = response.data;
-        if (data && reqHash && this.enableCache) {
-            this.storageService.set<T>(reqHash, data);
-        }
     }
 
     private extractToken(response) {
@@ -116,29 +95,24 @@ export class ApiService {
         }
     }
 
-    private loadOffline<T>(reqHash:string):IPromise<T> {
-        let data = this.storageService.get<T>(reqHash);
-        return data ? this.$q.resolve(data) : this.$q.reject(new Err(Err.Code.NoDataConnection));
-    }
-
-    public get<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('get', edge, data),
+    public get<T, U>(edge: string, data?: T): ICancellablePromise<U> {
+        let config = this.onBeforeSend(),
             urlData = data ? `?${window['param'](data)}` : '';
-        if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
-        return this.requestHandler<U>(config.reqHash, this.$http.get(this.endPoint + edge + '?' + urlData.substr(1), config.reqConfig));
+        if (config.error) return <ICancellablePromise<U>>this.$q.reject(config.error);
+        return this.requestHandler<U>(this.$http.get(this.endPoint + edge + '?' + urlData.substr(1), config.reqConfig), config.canceler);
     }
 
-    public post<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('post', edge, data);
-        if (!config.tobeContinue) return this.loadOffline<U>(config.reqHash);
+    public post<T, U>(edge: string, data?: T): ICancellablePromise<U> {
+        let config = this.onBeforeSend();
+        if (config.error) return <ICancellablePromise<U>>this.$q.reject(config.error);
         data = data || <T>{};
-        return this.requestHandler<U>(config.reqHash, this.$http.post(this.endPoint + edge, data, config.reqConfig));
+        return this.requestHandler<U>(this.$http.post(this.endPoint + edge, data, config.reqConfig), config.canceler);
     }
 
-    public upload<T extends Object, U>(edge:string, files:IFileKeyValue, data?:T):IPromise<U> {
-        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('upload', edge, null),
+    public upload<T, U>(edge: string, files: IFileKeyValue, data?: T): ICancellablePromise<U> {
+        let config = this.onBeforeSend(),
             fd = new FormData();
-        if (!config.tobeContinue) return this.$q.reject(new Err(Err.Code.NoDataConnection));
+        if (config.error) return <ICancellablePromise<U>>this.$q.reject(config.error);
         if (data) {
             fd.append('data', JSON.stringify(data));
         }
@@ -155,23 +129,24 @@ export class ApiService {
         }
         config.reqConfig.transformRequest = angular.identity;
         config.reqConfig.headers['content-type'] = undefined;
-        return this.requestHandler<U>(config.reqHash, this.$http.post(this.endPoint + edge, fd, config.reqConfig));
+        return this.requestHandler<U>(this.$http.post(this.endPoint + edge, fd, config.reqConfig), config.canceler);
     }
 
-    public put<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('put', edge, data);
-        if (!config.tobeContinue) return this.loadOffline(config.reqHash);
+    public put<T, U>(edge: string, data?: T): ICancellablePromise<U> {
+        let config = this.onBeforeSend();
+        if (config.error) return <ICancellablePromise<U>>this.$q.reject(config.error);
         data = data || <T>{};
-        return this.requestHandler<U>(config.reqHash, this.$http.put(this.endPoint + edge, data, config.reqConfig));
+        return this.requestHandler<U>(this.$http.put(this.endPoint + edge, data, config.reqConfig), config.canceler);
     }
 
-    public delete<T extends Object, U>(edge:string, data?:T):IPromise<U> {
-        let config:IOnBeforeSendResult<T> = this.onBeforeSend<T>('delete', edge, data),
+    public delete<T, U>(edge: string, data?: T): ICancellablePromise<U> {
+        let config = this.onBeforeSend(),
             urlData = data ? `?${window['param'](data)}` : '';
-        return this.requestHandler<U>(config.reqHash, this.$http.delete(`${this.endPoint}${edge}?${urlData}`, config.reqConfig));
+        if (config.error) return <ICancellablePromise<U>>this.$q.reject(config.error);
+        return this.requestHandler<U>(this.$http.delete(`${this.endPoint}${edge}?${urlData}`, config.reqConfig), config.canceler);
     }
 
-    public static getInstance():ApiService {
+    public static getInstance(): ApiService {
         return ApiService.instance || null;
     }
 }

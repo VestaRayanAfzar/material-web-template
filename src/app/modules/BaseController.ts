@@ -1,10 +1,12 @@
+import {IPromise} from "angular";
 import {NotificationService} from "../service/NotificationService";
 import {FormService} from "../service/FormService";
 import {AuthService} from "../service/AuthService";
-import {ApiService} from "../service/ApiService";
+import {ApiService, IFileKeyValue} from "../service/ApiService";
 import {LogService} from "../service/LogService";
 import {ClientApp} from "../ClientApp";
 import {MetaTagsService} from "../service/MetaTagsService";
+import {IUpsertResult} from "vesta-schema/ICRUDResult";
 
 export interface IBaseController {
     registerPermissions:()=>void;

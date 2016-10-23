@@ -37,7 +37,15 @@ export function appMenu():IDirective {
         template: `<nav role="navigation" class="app-menu">
             <ul role="menu" class="menu-list">
                 <li class="menu-item" ng-repeat="item in ctrl.menuItems track by $index">
-                    <a ui-sref="{{item.state}}">{{item.title}}</a>
+                    <a ng-if="!item.isAbstract" ui-sref="{{item.state}}">{{item.title}}</a>
+                    <div ng-if="item.isAbstract">
+                        <span>{{item.title}}</span>
+                        <ul>
+                            <li ng-repeat="child in item.children">
+                                <a ui-sref="{{child.state}}">{{child.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </nav>`,

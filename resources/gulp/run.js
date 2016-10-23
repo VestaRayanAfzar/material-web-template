@@ -4,7 +4,6 @@ var path = require('path'),
     server = require('gulp-develop-server'),
     root = path.join(__dirname, '../..'),
     buildDirectory = path.join(root, 'build'),
-    setting = require('./setting'),
     serverDirectory = path.join(buildDirectory, 'app/server');
 
 gulp.task('default', function () {
@@ -26,7 +25,7 @@ gulp.task('browse', function () {
     // launching browser and keep it synced with asset updates
     var port = getHostPort();
     browserSync.init(null, {
-        proxy: setting.httpServer + (port ? (':' + port) : ''),
+        proxy: 'localhost' + (port ? (':' + port) : ''),
         files: [buildDirectory + '/**/*', '!' + serverDirectory + '/**/*']
     });
 });

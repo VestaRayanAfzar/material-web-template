@@ -2,46 +2,77 @@
     min-height: 100%;
     display: flex;
     justify-content: center;
+    background: url("../img/bg-login.jpg") no-repeat;
+    background-size: cover;
     > form {
-        border-radius: $button-border-radius;
+        border-radius: $borderRadius;
         display: block;
         position: relative;
         width: 400px;
         margin: auto;
-        background: transparentize($dark, .2);
-        color: $light;
+        background: transparentize($light, 0.2);
         text-align: center;
+        box-shadow: 0 0 10px $dark;
         h1 {
             padding: 10px 0;
-            font-size: $fontSizeXXLarge;
-        }
-        label {
-            color: $light;
-            display: block;
-            text-align: start;
-            padding: 7px 0 5px;
+            font-size: $fontSizeLarge;
         }
         input {
             width: 100%;
-            background: $light;
-            border-radius: $button-border-radius;
-            padding: 7px;
-            border: 2px solid $light;
+            background: transparentize($light, 0.7);
+            border-radius: $borderRadius;
+            padding: 7px 50px 7px 7px;
+            border: 1px solid $borderColor;
             outline: 0;
             font-size: $fontSizeMedium;
-            &.ng-dirty.ng-invalid {
-                border-bottom-color: $error;
+            //box-shadow: 0 0 2px 0;
+            //&.ng-dirty.ng-invalid {
+            //    border-bottom-color: $error;
+            //}
             }
+        md-icon {
+            position: absolute;
+            border-left: 1px solid $borderColor;
+            right: 0;
+            top: 7px;
+            padding: 3px 7px;
+            width: 42px;
+            height: 32px;
+            //background: $silver;
+            border-radius: 0 $borderRadius $borderRadius 0;
+            color: $primary;
+            transition: color $transitionLongDuration;
         }
     }
     .form-els {
-        padding: 20px;
+        padding: 20px 20px 10px;
         > div {
             //border: 1px solid red;
             margin: 10px 0;
+            position: relative;
+        }
+        .ng-invalid + md-icon {
+            color: $error;
         }
     }
     .form-actions {
-        padding: 10px 0 20px 0;
+        padding: 0 20px 20px 20px;
+
+    }
+    .form-footer {
+        text-align: $opposite-float;
+        border-top: 1px solid $borderColor;
+        border-radius: 0 0 2 * $borderRadius 2 * $borderRadius;
+        background: transparentize($light, .65);
+        padding: 10px 20px;
+        button {
+            margin: 0;
+            width: 35%;
+            //height: 42px;
+        }
+        a {
+            display: inline-block;
+            vertical-align: middle;
+        }
     }
 }

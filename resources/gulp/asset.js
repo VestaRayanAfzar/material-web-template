@@ -46,7 +46,6 @@ module.exports = function (dir, setting) {
 
     gulp.task('asset:lib', function () {
         var libs = [
-            dir.npm + '/jssha/src/sha.js',
             dir.npm + '/jquery-param/jquery-param.js',
             dir.npm + '/angular/angular.js',
             dir.npm + '/angular-animate/angular-animate.js',
